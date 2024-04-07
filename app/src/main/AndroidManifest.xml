@@ -13,6 +13,21 @@
         android:theme="@style/Theme.CarMain"
         tools:targetApi="31">
         <activity
+            android:name=".Stats"
+            android:exported="false"
+            android:label="@string/title_activity_stats"
+            android:theme="@style/Theme.CarMain" />
+        <activity
+            android:name=".TimeLine"
+            android:exported="false"
+            android:label="@string/title_activity_time_line"
+            android:theme="@style/Theme.CarMain" />
+        <activity
+            android:name=".Graphs"
+            android:exported="false"
+            android:label="@string/title_activity_graphs"
+            android:theme="@style/Theme.CarMain" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
