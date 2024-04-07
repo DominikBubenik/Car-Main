@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.tiptime
+package com.example.car_main
 
 import android.app.Activity
 import android.app.AlertDialog
