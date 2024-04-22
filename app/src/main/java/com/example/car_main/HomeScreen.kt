@@ -23,20 +23,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.car_main.navigation.NavigationDestination
 import com.example.car_main.ui.theme.BarColour
 
+object HomeDestination : NavigationDestination {
+    override val route = "home"
+    override val titleRes = R.string.app_name
+}
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+   navController: NavController = rememberNavController()
+) {
     val context = LocalContext.current
-    FourButtonsInVerticalLine(context)
+    FourButtonsInVerticalLine(navController, context)
 }
 
 
 @Composable
-fun FourButtonsInVerticalLine(context: Context) {
+fun FourButtonsInVerticalLine(
+    navController: NavController,
+    context: Context
+) {
     Row (
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .background(BarColour)
             .padding(top = 40.dp, bottom = 20.dp),
         horizontalArrangement = Arrangement.Center,
@@ -75,7 +88,9 @@ fun FourButtonsInVerticalLine(context: Context) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Button(
-            onClick = {},
+            onClick = {
+                navController.navigate(StatsDestination.route)
+            },
             modifier = Modifier
                 .height(64.dp), // Distribute available width equally among buttons
             colors = ButtonDefaults.buttonColors(Color.Gray),
@@ -84,10 +99,11 @@ fun FourButtonsInVerticalLine(context: Context) {
         )
     }
 }
-@Preview(widthDp = 285, heightDp = 40)
-@Composable
-private fun HomeScreenPreview() {
-    HomeScreen()
-    //FourButtonsInVerticalLine()
-    //PrimaryButton(Modifier)
-}
+//@Preview(widthDp = 285, heightDp = 40)
+//@Composable
+//private fun HomeScreenPreview() {
+//    HomeScreen(navigateToItemEntry: () -> Unit,
+//    navigateToItemUpdate: (Int) -> Unit)
+//    //FourButtonsInVerticalLine()
+//    //PrimaryButton(Modifier)
+//}
