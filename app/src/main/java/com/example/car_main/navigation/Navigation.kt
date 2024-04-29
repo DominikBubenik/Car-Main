@@ -21,18 +21,17 @@ fun Navigation(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    NavHost(navController = navController, 
-        startDestination = HomeDestination.route, 
-        modifier = modifier 
+    NavHost(
+        navController = navController,
+        startDestination = HomeDestination.route,
+        modifier = Modifier
     ) {
         composable(route = HomeDestination.route) {
             HomeScreen(navController = navController)
         }
         composable( route = StatsDestination.route) {
-            StatsScreen(navController = navController)
+            StatsScreen(navController = navController) //
         }
-
-
     }
 
 }
