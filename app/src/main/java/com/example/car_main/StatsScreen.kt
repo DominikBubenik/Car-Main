@@ -21,16 +21,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.car_main.navigation.NavigationDestination
 import com.example.car_main.ui.theme.BarColour
 import com.example.car_main.ui.theme.CarMainTheme
 object StatsDestination : NavigationDestination {
     override val route = "stats"
-    override val titleRes = R.string.app_name
+    override val titleRes = R.string.stats
 }
-@Composable
-fun StatsScreen(navController: NavController) {
 
+@Composable
+fun StatsScreen(navController: NavHostController) {
     Row (
         modifier = Modifier.fillMaxWidth()
             .background(BarColour)

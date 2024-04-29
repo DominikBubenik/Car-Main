@@ -79,8 +79,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.car_main.Graphs
 import com.example.car_main.TimeLine
+import com.example.car_main.navigation.Navigation
 import com.example.car_main.ui.theme.BarColour
 import java.text.NumberFormat
 
@@ -90,7 +90,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //WindowCompat.setDecorFitsSystemWindows(window,false)
         setContent {
-            HomeScreen()
+        Navigation(navController = rememberNavController() )
+        //HomeScreen()
         }
     }
 }
