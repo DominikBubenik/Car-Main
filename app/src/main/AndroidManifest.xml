@@ -16,7 +16,7 @@
         <activity
             android:name=".TimeLine"
             android:exported="false"
-            android:label="@string/title_activity_time_line"
+            android:label="@string/time_line"
             android:theme="@style/Theme.CarMain" />
 
         <activity

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Car-Main</string>
     <string name="graphs">Graphs</string>
-    <string name="title_activity_time_line">TimeLine</string>
+    <string name="time_line">TimeLine</string>
     <string name="stats">Stats</string>
+    <string name="car_add">car_add</string>
 </resources>
