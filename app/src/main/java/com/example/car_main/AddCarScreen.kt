@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,16 +21,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.car_main.home.MyTopAppBar
 import com.example.car_main.navigation.NavigationDestination
+import kotlinx.coroutines.launch
 
 object AddCarDestination : NavigationDestination {
     override val route = "car_add_screen"
@@ -38,30 +44,46 @@ object AddCarDestination : NavigationDestination {
 @Composable
 fun AddCarScreen(
     navigateBack: () -> Unit,
+    viewModel: AddCarViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController) {
+    val coroutineScope = rememberCoroutineScope()
     Scaffold (
         topBar = { MyTopAppBar(title = "Add Car", canNavigateBack = true, navigateBack= navigateBack) },
 
    ) {innerPadding ->
-        AddCarBody( modifier = Modifier
-            .padding(
-                start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-                top = innerPadding.calculateTopPadding(),
-                end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
-            )
-            .verticalScroll(rememberScrollState())
-            .fillMaxWidth())
+        AddCarBody(
+            carUiState =viewModel.carUiState,
+            onCarValueChange = viewModel::updateUiState,
+            onSaveClick = {
+                // Note: If the user rotates the screen very fast, the operation may get cancelled
+                // and the item may not be saved in the Database. This is because when config
+                // change occurs, the Activity will be recreated and the rememberCoroutineScope will
+                // be cancelled - since the scope is bound to composition.
+                coroutineScope.launch {
+                    viewModel.saveItem()
+                    navigateBack()
+                }
+            },
+            modifier = Modifier
+                .padding(
+                    start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+                    top = innerPadding.calculateTopPadding(),
+                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+                )
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth())
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCarBody(
-    //itemUiState: ItemUiState,
-    //onItemValueChange: (ItemDetails) -> Unit,
-    //onSaveClick: () -> Unit,
+    carUiState: CarUiState,
+    onCarValueChange: (CarDetails) -> Unit,
+    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var carDetails = carUiState.carDetails
     Column(
         modifier = modifier.padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(30.dp)
@@ -71,9 +93,12 @@ fun AddCarBody(
 //            onValueChange = onItemValueChange,
 //            modifier = Modifier.fillMaxWidth()
 //        )
-        var brand by remember { mutableStateOf(TextFieldValue("")) }
-        OutlinedTextField(value = brand,
-            onValueChange = { brand = it },
+        //var brand by remember { mutableStateOf(TextFieldValue("")) }
+        OutlinedTextField(
+
+//            onValueChange = { onValueChange(itemDetails.copy(name = it)) },
+            value = carDetails.brand,
+            onValueChange = { onCarValueChange(carDetails.copy(brand = it))  },
             label = { Text(text = "Brand") },
             modifier = Modifier
                 .fillMaxWidth() // Fill the available width
@@ -83,9 +108,9 @@ fun AddCarBody(
                 focusedBorderColor = Green,
                 unfocusedBorderColor = Green)
         )
-        var model by remember { mutableStateOf(TextFieldValue("")) }
-        OutlinedTextField(value = model,
-            onValueChange = { model = it },
+        OutlinedTextField(
+            value = carDetails.model,
+            onValueChange = { onCarValueChange(carDetails.copy(model = it))},
             label = { Text(text = "Model") },
             modifier = Modifier
                 .fillMaxWidth() // Fill the available width
@@ -95,9 +120,11 @@ fun AddCarBody(
                 focusedBorderColor = Green,
                 unfocusedBorderColor = Green)
         )
-        var year by remember { mutableStateOf(TextFieldValue("")) }
-        OutlinedTextField(value = year,
-            onValueChange = { year = it },
+        var yearText by remember { mutableStateOf(TextFieldValue("")) }
+        OutlinedTextField(
+            value = yearText,
+            onValueChange = { yearText = it
+                onCarValueChange(carDetails.copy(year = yearText.text.toIntOrNull() ?: 100))},
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             label = { Text(text = "Year") },
             modifier = Modifier
@@ -108,6 +135,13 @@ fun AddCarBody(
                 focusedBorderColor = Green,
                 unfocusedBorderColor = Green)
         )
+        Button(
+            onClick = onSaveClick,
+            enabled = carUiState.isEntryValid,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Save Car")
+        }
     }
 }
 
