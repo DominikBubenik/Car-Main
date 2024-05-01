@@ -1,6 +1,12 @@
-package com.example.car_main
+package com.example.car_main.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "user_Cars")
 data class Car(
+    @PrimaryKey(autoGenerate = true)
+    val id:Int = 0,
     val brand: String = "",
     val model: String = "",
     val year: Int = 0,
@@ -9,7 +15,3 @@ data class Car(
     var isActive: Boolean = false
 )
 
-data class CarUiState(
-    val carDetails: Car = Car(),
-    val isEntryValid: Boolean = false
-)

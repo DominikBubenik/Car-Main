@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation.NavHostController
+import com.example.car_main.home.MyTopAppBar
 import com.example.car_main.navigation.NavigationDestination
 
 object TimeLineDestination : NavigationDestination {
@@ -23,7 +24,7 @@ fun TimeLineScreen(
     navController: NavHostController)
 {
     Scaffold (
-        topBar = {MyTopAppBar(title = "Timeline", canNavigateBack = true, navigateBack= navigateBack)},
+        topBar = { MyTopAppBar(title = "Timeline", canNavigateBack = true, navigateBack= navigateBack) },
 
         ) {innerPadding ->
         TimeLineBody( modifier = Modifier

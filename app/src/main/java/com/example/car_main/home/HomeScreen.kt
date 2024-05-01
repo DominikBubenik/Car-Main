@@ -1,4 +1,4 @@
-package com.example.car_main
+package com.example.car_main.home
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -43,6 +43,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.car_main.R
+import com.example.car_main.StatsDestination
+import com.example.car_main.TimeLineDestination
 import com.example.car_main.navigation.NavigationDestination
 import com.example.car_main.ui.theme.BarColour
 

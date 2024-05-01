@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 
 import com.example.car_main.AddCarDestination
 import com.example.car_main.AddCarScreen
-import com.example.car_main.HomeDestination
-import com.example.car_main.HomeScreen
+import com.example.car_main.home.HomeDestination
+import com.example.car_main.home.HomeScreen
 import com.example.car_main.StatsDestination
 import com.example.car_main.StatsScreen
 import com.example.car_main.TimeLineDestination
