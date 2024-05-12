@@ -1,5 +1,9 @@
 package com.example.car_main
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -7,12 +11,12 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,16 +29,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Green
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.car_main.home.MyTopAppBar
 import com.example.car_main.navigation.NavigationDestination
 import kotlinx.coroutines.launch
+
+
 
 object AddCarDestination : NavigationDestination {
     override val route = "car_add_screen"
@@ -84,6 +91,13 @@ fun AddCarBody(
     modifier: Modifier = Modifier
 ) {
     var carDetails = carUiState.carDetails
+    var selectedImageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+//    val launcher = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.PickVisualMedia(),
+//        onResult = { uri ->  selectedImageUri = uri})
+
     Column(
         modifier = modifier.padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(30.dp)
@@ -135,6 +149,27 @@ fun AddCarBody(
                 focusedBorderColor = Green,
                 unfocusedBorderColor = Green)
         )
+//        LazyColumn(modifier = Modifier) {
+//            item {
+//                Button(onClick = {
+////                    launcher.launch(PickVisualMediaRequest(
+////                        ActivityResultContracts.PickVisualMedia.ImageOnly
+////                    ))
+//                }) {
+//                    Text(text = "Choose a Photo")
+//                }
+//            }
+//            item {
+//                AsyncImage(
+//                    model = selectedImageUri,
+//                    contentDescription = null,
+//                    modifier = Modifier.fillMaxWidth(),
+//                    contentScale = ContentScale.Crop
+//                    )
+//            }
+//        }
+//
+//
         Button(
             onClick = onSaveClick,
             enabled = carUiState.isEntryValid,
@@ -143,7 +178,10 @@ fun AddCarBody(
             Text(text = "Save Car")
         }
     }
+
 }
+
+
 
 @Composable
 fun ItemInputForm(
