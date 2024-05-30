@@ -24,6 +24,11 @@ object AppViewModelProvider {
             AddCarViewModel(inventoryApplication().container.carsRepository)
         }
 
+        initializer {
+            CarDetailsScreenViewModel(this.createSavedStateHandle(),
+                inventoryApplication().container.carsRepository)
+        }
+
         // Initializer for ItemDetailsViewModel
 
         // Initializer for HomeViewModel

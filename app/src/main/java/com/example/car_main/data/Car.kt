@@ -13,5 +13,6 @@ data class Car(
     val licenceNum: String = "",
     val fuelType: String = "",
     var isActive: Boolean = false
+    , val imageUri: String? = ""
 )
 

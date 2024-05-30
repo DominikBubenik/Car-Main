@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+//import androidx.compose.foundation.layout.FlowColumnScopeInstance.align
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,23 +25,28 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,7 +55,6 @@ import androidx.compose.ui.layout.ContentScale
 //import androidx.compose.ui.node.CanFocusChecker.end
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -58,30 +63,29 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.car_main.AppViewModelProvider
+import com.example.car_main.CarDetailsScreenViewModel
 import com.example.car_main.R
 import com.example.car_main.StatsDestination
 import com.example.car_main.TimeLineDestination
 import com.example.car_main.data.Car
 import com.example.car_main.navigation.NavigationDestination
 import com.example.car_main.ui.theme.BarColour
+import kotlinx.coroutines.launch
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
     override val titleRes = R.string.app_name
 }
 
-//enum class CarMainScreens(@StringRes val title: Int) {
-//    Home(title = R.string.app_name),
-//    StatsScreen(title = R.string.stats)
-//}
-
 @Composable
 fun HomeScreen(
     navigateToAddCar: () -> Unit,
-   navController: NavHostController = rememberNavController(),
+    navigateToCarDetails: (Int) -> Unit,
+    navController: NavHostController = rememberNavController(),
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
+
     val homeUiState by viewModel.homeUiState.collectAsState()
     Scaffold (
         topBar = {
@@ -139,17 +143,6 @@ fun HomeScreen(
         },
 
         floatingActionButton = {
-//            ExtendedFloatingActionButton(
-//                onClick = { },
-//                modifier = Modifier
-//                    .padding(
-//                        end = WindowInsets.safeDrawing.asPaddingValues()
-//                            .calculateEndPadding(LocalLayoutDirection.current)
-//                    ),
-//                containerColor = Color.Gray,
-//                icon = { Icon(Icons.Filled.Edit, "Extended floating action button.") },
-//                text = { Text(text = "Extended FAB") },
-//            )
             LargeFloatingActionButton(
                 onClick = navigateToAddCar,//navigateToItemEntry,
                 modifier = Modifier
@@ -177,7 +170,7 @@ fun HomeScreen(
                 .fillMaxSize()
 
         ) {
-            CarCardList(itemList = homeUiState.itemList, onItemClick = { }, contentPadding = innerPadding)
+            CarCardList(itemList = homeUiState.itemList, onCarClick = navigateToCarDetails, contentPadding = innerPadding)
         }
     }
 }
@@ -185,25 +178,32 @@ fun HomeScreen(
 @Composable
 private fun CarCardList(
     itemList: List<Car>,
-    onItemClick: (Car) -> Unit,
+    onCarClick: (Int) -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val coroutineScope = rememberCoroutineScope()
     LazyColumn(
         modifier = modifier,
         contentPadding = contentPadding
     ) {
         items(items = itemList, key = { it.id }) { item ->
             CarCard(car = item,
+                onDelete = {
+                    coroutineScope.launch {
+                        viewModel.deleteItem(item)
+                    }
+                },
                 modifier = Modifier
                     .padding(16.dp)
-                    .clickable { onItemClick(item) })
+                    .clickable { onCarClick(item.id) })
         }
     }
 }
 
 @Composable
-fun CarCard(car: Car,modifier: Modifier = Modifier) {
+fun CarCard(car: Car,onDelete: () -> Unit,modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
 //            .fillMaxWidth()
@@ -212,24 +212,52 @@ fun CarCard(car: Car,modifier: Modifier = Modifier) {
         //set shape of the card
         shape = RoundedCornerShape(16.dp),
         content = {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.my_car), // Specify the drawable resource for the image
-                    contentDescription = "Car Image", // Provide content description for accessibility
+            Box(modifier = Modifier.fillMaxSize()) {
+                var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.my_car), // Specify the drawable resource for the image
+                        contentDescription = "Car Image", // Provide content description for accessibility
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp), // Adjust height as needed
+                        contentScale = ContentScale.FillWidth // Scale the image to fill the width of the parent
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp)) // Add spacing between image and text
+
+                    // Text content
+                    Text(
+                        car.id.toString() + " " + car.brand + " " + car.model + " " + car.licenceNum,
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+
+                IconButton(
+                    onClick = { deleteConfirmationRequired = true }, // Empty lambda, button does nothing
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp), // Adjust height as needed
-                    contentScale = ContentScale.FillWidth // Scale the image to fill the width of the parent
-                )
-
-                Spacer(modifier = Modifier.height(16.dp)) // Add spacing between image and text
-
-                // Text content
-
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete Car"
+                    )
+                }
+                if (deleteConfirmationRequired) {
+                    DeleteConfirmationDialog(
+                        onDeleteConfirm = {
+                            deleteConfirmationRequired = false
+                            onDelete()
+                        },
+                        onDeleteCancel = { deleteConfirmationRequired = false },
+                        modifier = Modifier.padding()
+                    )
+                }
             }
-            Text(car.id.toString() + car.brand + car.model + car.licenceNum, modifier = Modifier.padding(16.dp),style = MaterialTheme.typography.labelLarge)
         }
     )
 }
@@ -261,6 +289,25 @@ fun MyTopAppBar(
     )
 }
 
+@Composable
+private fun DeleteConfirmationDialog(
+    onDeleteConfirm: () -> Unit, onDeleteCancel: () -> Unit, modifier: Modifier = Modifier
+) {
+    AlertDialog(onDismissRequest = { /* Do nothing */ },
+        title = { Text("Deleting") },
+        text = { Text("Do you want to remove car") },
+        modifier = modifier,
+        dismissButton = {
+            TextButton(onClick = onDeleteCancel) {
+                Text(text = "No")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDeleteConfirm) {
+                Text(text = "Yes")
+            }
+        })
+}
 @Composable
 fun FourButtonsInVerticalLine(
     context: Context
