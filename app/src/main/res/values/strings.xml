@@ -4,4 +4,5 @@
     <string name="time_line">TimeLine</string>
     <string name="stats">Stats</string>
     <string name="car_add">car_add</string>
+    <string name="car_detail">car_add</string>
 </resources>

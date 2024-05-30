@@ -62,10 +62,7 @@ fun AddCarScreen(
             carUiState =viewModel.carUiState,
             onCarValueChange = viewModel::updateUiState,
             onSaveClick = {
-                // Note: If the user rotates the screen very fast, the operation may get cancelled
-                // and the item may not be saved in the Database. This is because when config
-                // change occurs, the Activity will be recreated and the rememberCoroutineScope will
-                // be cancelled - since the scope is bound to composition.
+
                 coroutineScope.launch {
                     viewModel.saveItem()
                     navigateBack()
@@ -91,12 +88,18 @@ fun AddCarBody(
     modifier: Modifier = Modifier
 ) {
     var carDetails = carUiState.carDetails
-    var selectedImageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
+//    var selectedImageUri by remember {
+//        mutableStateOf<Uri?>(null)
+//    }
+
 //    val launcher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.PickVisualMedia(),
-//        onResult = { uri ->  selectedImageUri = uri})
+//        contract = ActivityResultContracts.GetContent()
+//    ) { uri: Uri? ->
+//        selectedImageUri = uri
+//        uri?.let {
+//            onCarValueChange(carDetails.copy(imageUri = it.toString()))
+//        }
+//    }
 
     Column(
         modifier = modifier.padding(10.dp),
@@ -149,12 +152,29 @@ fun AddCarBody(
                 focusedBorderColor = Green,
                 unfocusedBorderColor = Green)
         )
-//        LazyColumn(modifier = Modifier) {
+        //LazyColumn(modifier = Modifier) {
 //            item {
 //                Button(onClick = {
-////                    launcher.launch(PickVisualMediaRequest(
-////                        ActivityResultContracts.PickVisualMedia.ImageOnly
-////                    ))
+//                    launcher.launch("image/*")
+//                }) {
+//                    Text(text = "Choose a Photo")
+//                }
+//            }
+//            item {
+//                selectedImageUri?.let { uri ->
+//                    AsyncImage(
+//                        model = uri,
+//                        contentDescription = null,
+//                        modifier = Modifier.fillMaxWidth(),
+//                        contentScale = ContentScale.Crop
+//                    )
+//                }
+//            }
+        //            item {
+//                Button(onClick = {
+//                    launcher.launch(PickVisualMediaRequest(
+//                        ActivityResultContracts.PickVisualMedia.ImageOnly
+//                    ))
 //                }) {
 //                    Text(text = "Choose a Photo")
 //                }
@@ -167,9 +187,9 @@ fun AddCarBody(
 //                    contentScale = ContentScale.Crop
 //                    )
 //            }
-//        }
-//
-//
+       // }
+
+
         Button(
             onClick = onSaveClick,
             enabled = carUiState.isEntryValid,

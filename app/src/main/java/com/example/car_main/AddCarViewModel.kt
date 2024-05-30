@@ -32,6 +32,9 @@ class AddCarViewModel(private val carsRepository: CarsRepository) : ViewModel() 
             carsRepository.insertCar(carUiState.carDetails.toItem())
         }
     }
+    suspend fun deleteItem() {
+        carsRepository.deleteCar(carUiState.carDetails.toItem())
+    }
 
     private fun validateInput(uiState: CarDetails = carUiState.carDetails): Boolean {
         return with(uiState) {
@@ -53,6 +56,7 @@ data class CarDetails(
     val licenceNum: String = "",
     val fuelType: String = "",
     var isActive: Boolean = false
+    , val imageUri: String? = ""
 )
 
 fun CarDetails.toItem(): Car = Car(
@@ -62,6 +66,7 @@ fun CarDetails.toItem(): Car = Car(
     licenceNum = licenceNum,
     fuelType = fuelType,
     isActive = isActive
+    , imageUri = imageUri
     //price = price.toDoubleOrNull() ?: 0.0,
     //quantity = quantity.toIntOrNull() ?: 0
 )
@@ -85,4 +90,5 @@ fun Car.toCarDetails(): CarDetails = CarDetails(
     licenceNum = licenceNum,
     fuelType = fuelType,
     isActive = isActive
+    , imageUri = imageUri
 )
