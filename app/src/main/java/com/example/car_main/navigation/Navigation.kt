@@ -11,6 +11,8 @@ import androidx.navigation.navArgument
 
 import com.example.car_main.AddCarDestination
 import com.example.car_main.AddCarScreen
+import com.example.car_main.AddExpensesDestination
+import com.example.car_main.AddExpensesScreen
 import com.example.car_main.CarDetailsScrDestination
 import com.example.car_main.CarDetailsScreen
 import com.example.car_main.home.HomeDestination
@@ -61,6 +63,17 @@ fun Navigation(
                 navigateBack = { navController.popBackStack() },
                 navController = navController)
         }
+        composable(
+            route = AddExpensesDestination.routeWithArgs,
+            arguments = listOf(navArgument(AddExpensesDestination.carIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            AddExpensesScreen(
+                navigateBack = { navController.popBackStack() },
+                navController = navController)
+        }
+
     }
 
 }

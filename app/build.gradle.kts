@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.fir.expressions.FirEmptyArgumentList.arguments
+import org.jetbrains.kotlin.fir.resolve.calls.ResolvedCallArgument.DefaultArgument.arguments
+
 plugins {
     id("com.android.application")
     id("com.google.devtools.ksp") version "1.9.0-1.0.13"
@@ -19,6 +22,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        ksp{
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
+
     }
 
     buildTypes {
@@ -49,6 +57,7 @@ android {
         }
     }
 }
+
 
 dependencies {
 

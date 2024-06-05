@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -50,6 +51,7 @@ fun CarDetailsScreen(
     navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsState()
+    val carUiState = viewModel.carUiState
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
@@ -61,92 +63,169 @@ fun CarDetailsScreen(
         },
 
         ) { innerPadding ->
-        CarDetailsBody(
-            carUiState = uiState.value,
-            onCarValueChange = viewModel::updateUiState,
-            onSaveClick = {
 
-                coroutineScope.launch {
-                    viewModel.uiState
-                    navigateBack()
-                }
-            },
+        CarDetailsBody(
+            navController,
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
                     top = innerPadding.calculateTopPadding(),
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+                    bottom = innerPadding.calculateBottomPadding()
                 )
                 .verticalScroll(rememberScrollState())
                 .fillMaxWidth()
         )
     }
 }
-
-
 @Composable
 fun CarDetailsBody(
-    carUiState: CarDetailsUiState,
-    onCarValueChange: (CarDetails) -> Unit,
-    onSaveClick: () -> Unit,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var carDetails = carUiState.carDetails
-
     Column(
-        modifier = modifier.padding(10.dp),
-        verticalArrangement = Arrangement.spacedBy(30.dp)
+        modifier = modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        OutlinedTextField(
-            value = carDetails.brand,
-            onValueChange = { onCarValueChange(carDetails.copy(brand = it)) },
-            label = { Text(text = "Brand") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(72.dp),
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = carDetails.model,
-            onValueChange = { onCarValueChange(carDetails.copy(model = it)) },
-            label = { Text(text = "Model") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(72.dp),
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = carDetails.year.toString(),
-            onValueChange = {
-                val year = it.toIntOrNull() ?: 0
-                onCarValueChange(carDetails.copy(year = year))
-            },
-            label = { Text(text = "Year") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(72.dp),
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = carDetails.licenceNum,
-            onValueChange = { onCarValueChange(carDetails.copy(licenceNum = it)) },
-            label = { Text(text = "License Number") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(72.dp),
-            singleLine = true
-        )
         Button(
-            onClick = onSaveClick,
-            //enabled = carUiState.,
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(Color.Red),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Save Car")
+            Text(text = "Fuel Fill-Up", color = Color.White)
+        }
+
+        Button(
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(Color.Green),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Service", color = Color.White)
+        }
+
+        Button(
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(Color.Cyan),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Parking", color = Color.White)
+        }
+
+        Button(
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(Color(0xFFB4A235)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Tolls", color = Color.White)
+        }
+
+        Button(
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(Color.Black),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Other Expenses", color = Color.White)
         }
     }
 }
+
+
+//CarDetailsBody(
+////carDetails = viewModel.carUiState.carDetails,
+//carUiState = uiState.value,
+////onCarValueChange = viewModel::updateUiState,
+//onCarValueChange = { carDetails ->
+//    viewModel.updateUiState(carDetails)
+////                coroutineScope.launch {
+////                    viewModel.updateUiState(carDetails)
+////                }
+//},
+//onSaveClick = {
+//
+//    coroutineScope.launch {
+//        viewModel.updateUiState(viewModel.carUiState.carDetails)
+//        viewModel.uiState
+//        navigateBack()
+//    }
+//},
+//modifier = Modifier
+//.padding(
+//start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+//top = innerPadding.calculateTopPadding(),
+//end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+//)
+//.verticalScroll(rememberScrollState())
+//.fillMaxWidth()
+//)
+
+
+//
+//@Composable
+//fun CarDetailsBody(
+//    //carDetails: CarDetails,
+//    carUiState: CarDetailsUiState,
+//    onCarValueChange: (CarDetails) -> Unit = {},
+//    onSaveClick: () -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    var carDetails = carUiState.carDetails
+//    //var carDetails by remember { mutableStateOf(carUiState.carDetails) }
+//    var brandP = carDetails.brand
+//    Column(
+//        modifier = modifier.padding(10.dp),
+//        verticalArrangement = Arrangement.spacedBy(30.dp)
+//    ) {
+//        OutlinedTextField(
+//            value = brandP,
+//            onValueChange = { carDetails = carDetails.copy(brand = it)
+//                onCarValueChange(carDetails) },
+//            label = { Text(text = "Brand") },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(72.dp),
+//            singleLine = true
+//        )
+//
+//        OutlinedTextField(
+//            value = carDetails.model,
+//            onValueChange = { onCarValueChange(carDetails.copy(model = it)) },
+//            label = { Text(text = "Model") },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(72.dp),
+//            singleLine = true
+//        )
+//
+//        OutlinedTextField(
+//            value = carDetails.year.toString(),
+//            onValueChange = {
+//                val year = it.toIntOrNull() ?: 0
+//                onCarValueChange(carDetails.copy(year = year))
+//            },
+//            label = { Text(text = "Year") },
+//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(72.dp),
+//            singleLine = true
+//        )
+//
+//        OutlinedTextField(
+//            value = carDetails.licenceNum,
+//            onValueChange = { onCarValueChange(carDetails.copy(licenceNum = it)) },
+//            label = { Text(text = "License Number") },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(72.dp),
+//            singleLine = true
+//        )
+//        Button(
+//            onClick = onSaveClick,
+//            //enabled = carUiState.,
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            Text(text = "Save Car")
+//        }
+//    }
+//}
 

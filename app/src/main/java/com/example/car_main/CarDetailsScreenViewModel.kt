@@ -37,15 +37,22 @@ class CarDetailsScreenViewModel (
             )
     var carUiState by mutableStateOf(CarUiState())
         private set
-    fun updateUiState(carDetails: CarDetails) {
-        carUiState =
-            CarUiState(carDetails = carDetails, isEntryValid = validateInput(carDetails))
-    }
+
     private fun validateInput(uiState: CarDetails = carUiState.carDetails): Boolean {
         return with(uiState) {
             brand.isNotBlank() && model.isNotBlank() && year > 1800 //TODO add more constrains
         }
     }
+
+        fun updateUiState(carDetails: CarDetails) {
+        carUiState =
+            CarUiState(carDetails = carDetails, isEntryValid = validateInput(carDetails))
+    }
+//    suspend fun updateUiState(carDetails: CarDetails) {
+//        if (validateInput(carUiState.carDetails)) {
+//            carsRepository.updateCar(carUiState.carDetails.toItem())
+//        }
+//    }
     /**
      * Reduces the item quantity by one and update the [ItemsRepository]'s data source.
      */
@@ -74,3 +81,4 @@ class CarDetailsScreenViewModel (
 data class CarDetailsUiState(
     val carDetails: CarDetails = CarDetails()
 )
+

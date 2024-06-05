@@ -24,6 +24,7 @@ class AddCarViewModel(private val carsRepository: CarsRepository) : ViewModel() 
             CarUiState(carDetails = carDetails, isEntryValid = validateInput(carDetails))
     }
 
+
     /**
      * Inserts an [Item] in the Room database
      */
@@ -62,6 +63,7 @@ data class CarDetails(
 fun CarDetails.toItem(): Car = Car(
     id = id,
     brand = brand,
+    model = model,
     year = year,
     licenceNum = licenceNum,
     fuelType = fuelType,
@@ -86,6 +88,7 @@ fun Car.toItemUiState(isEntryValid: Boolean = false): CarUiState = CarUiState(
 fun Car.toCarDetails(): CarDetails = CarDetails(
     id = id,
     brand = brand,
+    model = model,
     year = year,
     licenceNum = licenceNum,
     fuelType = fuelType,
