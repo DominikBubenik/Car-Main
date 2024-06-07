@@ -18,23 +18,15 @@ class CarMainApplication : Application() {
         }
     }
 
-    /**
-     * AppContainer instance used by the rest of classes to obtain dependencies
-     */
     lateinit var container: AppContainer
-
     override fun onCreate() {
         super.onCreate()
-
-
         // Build the Room database with the migration
-        Room.databaseBuilder(applicationContext, CarDatabase::class.java, "car_database")
-            .fallbackToDestructiveMigration()
-            .addMigrations(migration1to2)
-            .build()
+//        Room.databaseBuilder(applicationContext, CarDatabase::class.java, "car_database")
+//            .fallbackToDestructiveMigration()
+//            .addMigrations(migration1to2)
+//            .build()
 
         container = AppDataContainer(this)
-
-
     }
 }

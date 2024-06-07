@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
         entity = Car::class,
         parentColumns = ["id"],
         childColumns = ["car_id"],
-        onDelete = ForeignKey.CASCADE // Define the behavior on deletion
+        onDelete = ForeignKey.CASCADE
     )
 ])
 data class Expense(

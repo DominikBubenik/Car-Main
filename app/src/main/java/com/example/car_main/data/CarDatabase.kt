@@ -9,8 +9,8 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 //, Expense::class
-@Database(entities = [Car::class],
-    version = 1,
+@Database(entities = [Car::class, Expense::class],
+    version = 2,
     exportSchema = true)
 abstract class CarDatabase : RoomDatabase() {
 
@@ -23,29 +23,21 @@ abstract class CarDatabase : RoomDatabase() {
 
         val migration1to2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-//                database.execSQL(
-//                    "CREATE TABLE IF NOT EXISTS `car_expenses` (" +
-//                            "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-//                            "`value` REAL NOT NULL, " +
-//                            "`kind` TEXT NOT NULL, " +
-//                            "`date` INTEGER NOT NULL, " +
-//                            "`car_id` INTEGER NOT NULL, " +
-//                            "FOREIGN KEY(`car_id`) REFERENCES `user_Cars`(`id`) ON DELETE CASCADE)"
-//                )
                 database.execSQL(
-                    "CREATE TABLE IF NOT EXISTS `len_tak` (" +
+                    "CREATE TABLE IF NOT EXISTS `car_expenses` (" +
                             "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                             "`value` REAL NOT NULL, " +
                             "`kind` TEXT NOT NULL, " +
-                            "`date` INTEGER NOT NULL "
+                            "`date` INTEGER NOT NULL, " +
+                            "`car_id` INTEGER NOT NULL, " +
+                            "FOREIGN KEY(`car_id`) REFERENCES `user_Cars`(`id`) ON DELETE CASCADE)"
                 )
             }
         }
         fun getDatabase(context: Context): CarDatabase {
-
-            // if the Instance is not null, return it, otherwise create a new database instance.
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, CarDatabase::class.java, "car_database")
+                    .addMigrations(migration1to2)
                     .build()
                     .also { Instance = it }
             }

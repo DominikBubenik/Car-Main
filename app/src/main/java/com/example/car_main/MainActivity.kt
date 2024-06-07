@@ -55,8 +55,6 @@ class MainActivity : ComponentActivity() {
         //WindowCompat.setDecorFitsSystemWindows(window,false)
         setContent {
             CarMainApp()
-        //Navigation(navController = rememberNavController() )
-        //HomeScreen()
         }
     }
 }
@@ -64,31 +62,7 @@ class MainActivity : ComponentActivity() {
 
 
 
-@Composable
-fun PrimaryButton(modifier: Modifier = Modifier) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .requiredWidth(width = 285.dp)
-            .requiredHeight(height = 40.dp)
-            .clip(shape = RoundedCornerShape(8.dp))
-            .background(color = Color.Black)
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
-        Text(
-            text = "Other Expenses",
-            color = Color.White,
-            lineHeight = 9.38.em,
-            style = androidx.compose.ui.text.TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            ),
-            modifier = Modifier
-                .wrapContentHeight(align = Alignment.CenterVertically))
-    }
-}
+
 
 @Composable
 fun ShowImageUploadDialog() {

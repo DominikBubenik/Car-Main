@@ -69,8 +69,6 @@ fun CarDetails.toItem(): Car = Car(
     fuelType = fuelType,
     isActive = isActive
     , imageUri = imageUri
-    //price = price.toDoubleOrNull() ?: 0.0,
-    //quantity = quantity.toIntOrNull() ?: 0
 )
 
 

@@ -63,7 +63,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.car_main.AppViewModelProvider
-import com.example.car_main.CarDetailsScreenViewModel
+import com.example.car_main.ExpensesMenuDestination
+import com.example.car_main.GraphDestination
 import com.example.car_main.R
 import com.example.car_main.StatsDestination
 import com.example.car_main.TimeLineDestination
@@ -80,7 +81,7 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     navigateToAddCar: () -> Unit,
-    navigateToCarDetails: (Int) -> Unit,
+    navigateToExpenesMenu: (Int) -> Unit,
     navController: NavHostController = rememberNavController(),
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -89,57 +90,58 @@ fun HomeScreen(
     val homeUiState by viewModel.homeUiState.collectAsState()
     Scaffold (
         topBar = {
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(BarColour)
-                    .padding(top = 40.dp, bottom = 20.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .height(64.dp), // Distribute available width equally among buttons
-                    colors = ButtonDefaults.buttonColors(Color.Gray),
-                    shape = RoundedCornerShape(8.dp),
-                    content = { Text(text = "Menu") }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(
-                    onClick = {
-                        //context.startActivity(Intent(context, Graphs::class.java))
-                    },
-                    modifier = Modifier
-                        .height(64.dp), // Distribute available width equally among buttons
-                    colors = ButtonDefaults.buttonColors(Color.Gray),
-                    shape = RoundedCornerShape(8.dp),
-                    content = { Text(text = "Graphs", textAlign = TextAlign.Center, maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(
-                    onClick = {
-                        navController.navigate(TimeLineDestination.route)
-                    },
-                    modifier = Modifier
-                        .height(64.dp), // Distribute available width equally among buttons
-                    colors = ButtonDefaults.buttonColors(Color.Gray),
-                    shape = RoundedCornerShape(8.dp),
-                    content = { Text(text = "Time Line", textAlign = TextAlign.Center) }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(
-                    onClick = {
-                        navController.navigate(StatsDestination.route)
-                    },
-                    modifier = Modifier
-                        .height(64.dp), // Distribute available width equally among buttons
-                    colors = ButtonDefaults.buttonColors(Color.Gray),
-                    shape = RoundedCornerShape(8.dp),
-                    content = { Text(text = "Stats", textAlign = TextAlign.Center) }
-                )
-            }
+            TopFourButtons(navController = navController)
+//            Row (
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(BarColour)
+//                    .padding(top = 40.dp, bottom = 20.dp),
+//                horizontalArrangement = Arrangement.Center,
+//                verticalAlignment = Alignment.CenterVertically
+//            ){
+//
+//                Button(
+//                    onClick = {},
+//                    modifier = Modifier
+//                        .height(64.dp), // Distribute available width equally among buttons
+//                    colors = ButtonDefaults.buttonColors(Color.Gray),
+//                    shape = RoundedCornerShape(8.dp),
+//                    content = { Text(text = "Menu") }
+//                )
+//                Spacer(modifier = Modifier.width(8.dp))
+//                Button(
+//                    onClick = {
+//                        //context.startActivity(Intent(context, Graphs::class.java))
+//                    },
+//                    modifier = Modifier
+//                        .height(64.dp), // Distribute available width equally among buttons
+//                    colors = ButtonDefaults.buttonColors(Color.Gray),
+//                    shape = RoundedCornerShape(8.dp),
+//                    content = { Text(text = "Graphs", textAlign = TextAlign.Center, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+//                )
+//                Spacer(modifier = Modifier.width(8.dp))
+//                Button(
+//                    onClick = {
+//                        navController.navigate(TimeLineDestination.route)
+//                    },
+//                    modifier = Modifier
+//                        .height(64.dp), // Distribute available width equally among buttons
+//                    colors = ButtonDefaults.buttonColors(Color.Gray),
+//                    shape = RoundedCornerShape(8.dp),
+//                    content = { Text(text = "Time Line", textAlign = TextAlign.Center) }
+//                )
+//                Spacer(modifier = Modifier.width(8.dp))
+//                Button(
+//                    onClick = {
+//                        navController.navigate(StatsDestination.route)
+//                    },
+//                    modifier = Modifier
+//                        .height(64.dp), // Distribute available width equally among buttons
+//                    colors = ButtonDefaults.buttonColors(Color.Gray),
+//                    shape = RoundedCornerShape(8.dp),
+//                    content = { Text(text = "Stats", textAlign = TextAlign.Center) }
+//                )
+//            }
         },
 
         floatingActionButton = {
@@ -170,8 +172,72 @@ fun HomeScreen(
                 .fillMaxSize()
 
         ) {
-            CarCardList(itemList = homeUiState.itemList, onCarClick = navigateToCarDetails, contentPadding = innerPadding)
+            CarCardList(itemList = homeUiState.itemList, onCarClick = navigateToExpenesMenu, contentPadding = innerPadding)
         }
+    }
+}
+
+@Composable
+fun TopFourButtons( navController : NavHostController, carId: Int = 0) {
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(BarColour)
+            .padding(top = 40.dp, bottom = 20.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Button(
+            onClick = {
+                navController.navigate(HomeDestination.route)
+                      },
+            modifier = Modifier
+                .height(64.dp), // Distribute available width equally among buttons
+            colors = ButtonDefaults.buttonColors(Color.Gray),
+            shape = RoundedCornerShape(8.dp),
+            content = { Text(text = "Menu") }
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Button(
+            onClick = {
+                navController.navigate("${GraphDestination.route}/${carId}")
+            },
+            modifier = Modifier
+                .height(64.dp), // Distribute available width equally among buttons
+            colors = ButtonDefaults.buttonColors(Color.Gray),
+            shape = RoundedCornerShape(8.dp),
+            content = {
+                Text(
+                    text = "Graphs",
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Button(
+            onClick = {
+                navController.navigate("${TimeLineDestination.route}/${carId}")
+            },
+            modifier = Modifier
+                .height(64.dp), // Distribute available width equally among buttons
+            colors = ButtonDefaults.buttonColors(Color.Gray),
+            shape = RoundedCornerShape(8.dp),
+            content = { Text(text = "Time Line", textAlign = TextAlign.Center) }
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Button(
+            onClick = {
+                navController.navigate("${StatsDestination.route}/${carId}")
+            },
+            modifier = Modifier
+                .height(64.dp), // Distribute available width equally among buttons
+            colors = ButtonDefaults.buttonColors(Color.Gray),
+            shape = RoundedCornerShape(8.dp),
+            content = { Text(text = "Stats", textAlign = TextAlign.Center) }
+        )
     }
 }
 

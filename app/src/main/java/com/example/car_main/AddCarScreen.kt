@@ -88,18 +88,6 @@ fun AddCarBody(
     modifier: Modifier = Modifier
 ) {
     var carDetails = carUiState.carDetails
-//    var selectedImageUri by remember {
-//        mutableStateOf<Uri?>(null)
-//    }
-
-//    val launcher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.GetContent()
-//    ) { uri: Uri? ->
-//        selectedImageUri = uri
-//        uri?.let {
-//            onCarValueChange(carDetails.copy(imageUri = it.toString()))
-//        }
-//    }
 
     Column(
         modifier = modifier.padding(10.dp),

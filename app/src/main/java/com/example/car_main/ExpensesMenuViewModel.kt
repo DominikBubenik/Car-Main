@@ -12,28 +12,27 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
-class CarDetailsScreenViewModel (
+class ExpensesMenuViewModel (
     savedStateHandle: SavedStateHandle,
     private val carsRepository: CarsRepository,
 ) : ViewModel() {
 
-    private val carId: Int = checkNotNull(savedStateHandle[CarDetailsScrDestination.carIdArg])
+    private val carId: Int = checkNotNull(savedStateHandle[ExpensesMenuDestination.carIdArg])
 
     /**
      * Holds the item details ui state. The data is retrieved from [ItemsRepository] and mapped to
      * the UI state.
      */
-    val uiState: StateFlow<CarDetailsUiState> =
+    val uiState: StateFlow<ExpensesUiState> =
         carsRepository.getCarStream(carId)
             .filterNotNull()
             .map {
-                CarDetailsUiState(carDetails = it.toCarDetails())
+                ExpensesUiState(carDetails = it.toCarDetails())
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = CarDetailsUiState()
+                initialValue = ExpensesUiState()
             )
     var carUiState by mutableStateOf(CarUiState())
         private set
@@ -78,7 +77,7 @@ class CarDetailsScreenViewModel (
 /**
  * UI state for ItemDetailsScreen
  */
-data class CarDetailsUiState(
+data class ExpensesUiState(
     val carDetails: CarDetails = CarDetails()
 )
 

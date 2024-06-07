@@ -1,18 +1,12 @@
 package com.example.car_main
 
 import android.app.Application
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.car_main.home.HomeViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
-import androidx.lifecycle.createSavedStateHandle
-
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.car_main.CarMainApplication
 
 
 object AppViewModelProvider {
@@ -25,8 +19,11 @@ object AppViewModelProvider {
         }
 
         initializer {
-            CarDetailsScreenViewModel(this.createSavedStateHandle(),
+            ExpensesMenuViewModel(this.createSavedStateHandle(),
                 inventoryApplication().container.carsRepository)
+        }
+        initializer {
+            AddExpenseViewModel(this.createSavedStateHandle(), inventoryApplication().container.carsRepository)
         }
 
         // Initializer for ItemDetailsViewModel

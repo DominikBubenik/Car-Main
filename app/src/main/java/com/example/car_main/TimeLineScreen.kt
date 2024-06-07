@@ -1,5 +1,6 @@
 package com.example.car_main
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,19 +13,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation.NavHostController
 import com.example.car_main.home.MyTopAppBar
+import com.example.car_main.home.TopFourButtons
 import com.example.car_main.navigation.NavigationDestination
 
 object TimeLineDestination : NavigationDestination {
     override val route = "timeLine_screen"
     override val titleRes = R.string.time_line
+    const val carIdArg = "carId"
+    val routeWithArgs = "${TimeLineDestination.route}/{$carIdArg}"
 }
 @Composable
 fun TimeLineScreen(
     navigateBack: () -> Unit,
-    navController: NavHostController)
+    navController: NavHostController
+)
 {
+    BackHandler {
+        navigateBack()
+    }
     Scaffold (
-        topBar = { MyTopAppBar(title = "Timeline", canNavigateBack = true, navigateBack= navigateBack) },
+        topBar = { TopFourButtons(navController = navController) },
 
         ) {innerPadding ->
         TimeLineBody( modifier = Modifier

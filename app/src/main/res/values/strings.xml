@@ -4,6 +4,6 @@
     <string name="time_line">TimeLine</string>
     <string name="stats">Stats</string>
     <string name="car_add">car_add</string>
-    <string name="car_detail">car_add</string>
+    <string name="expenses_menu">car_add</string>
     <string name="car_add_epenses">car_add_expense\n</string>
 </resources>

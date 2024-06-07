@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-class StatsViewModel (
+class TimeLineViewModel (
     savedStateHandle: SavedStateHandle,
     private val carsRepository: CarsRepository,
 ) : ViewModel() {
 
-    private val carId: Int = checkNotNull(savedStateHandle[StatsDestination.carIdArg])
+    private val carId: Int = checkNotNull(savedStateHandle[TimeLineDestination.carIdArg])
 
     /**
      * Holds the item details ui state. The data is retrieved from [ItemsRepository] and mapped to
@@ -73,8 +73,3 @@ class StatsViewModel (
         private const val TIMEOUT_MILLIS = 5_000L
     }
 }
-
-/**
- * Ui State for HomeScreen
- */
-//data class HomeUiState(val itemList: List<Item> = listOf())

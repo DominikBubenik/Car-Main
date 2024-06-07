@@ -5,53 +5,43 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.car_main.home.MyTopAppBar
 import com.example.car_main.navigation.NavigationDestination
-import kotlinx.coroutines.launch
 
-object CarDetailsScrDestination : NavigationDestination {
-    override val route = "car_details_screen"
-    override val titleRes = R.string.car_detail
+object ExpensesMenuDestination : NavigationDestination {
+    //override val route = "car_details_screen"
+    override val route = "expenses_menu_screen"
+    override val titleRes = R.string.expenses_menu
     const val carIdArg = "carId"
     val routeWithArgs = "$route/{$carIdArg}"
 }
 
 @Composable
-fun CarDetailsScreen(
+fun ExpensesMenuScreen(
     navigateBack: () -> Unit,
-    viewModel: CarDetailsScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: ExpensesMenuViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsState()
+    val carId = uiState.value.carDetails.id
     val carUiState = viewModel.carUiState
+
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
@@ -66,6 +56,8 @@ fun CarDetailsScreen(
 
         CarDetailsBody(
             navController,
+            carId = carId,
+            carUiState = carUiState,
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
@@ -81,6 +73,8 @@ fun CarDetailsScreen(
 @Composable
 fun CarDetailsBody(
     navController: NavHostController,
+    carId: Int,
+    carUiState: CarUiState,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -88,7 +82,9 @@ fun CarDetailsBody(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
-            onClick = {},
+            onClick = {
+                val kind = "Fuel"
+                navController.navigate("${AddExpensesDestination.route}/$carId/$kind")},
             colors = ButtonDefaults.buttonColors(Color.Red),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -96,7 +92,10 @@ fun CarDetailsBody(
         }
 
         Button(
-            onClick = {},
+            onClick = {
+                val kind = "Servise"
+                navController.navigate("${AddExpensesDestination.route}/$carId/$kind")
+            },
             colors = ButtonDefaults.buttonColors(Color.Green),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -104,7 +103,10 @@ fun CarDetailsBody(
         }
 
         Button(
-            onClick = {},
+            onClick = {
+                val kind = "Parking"
+                navController.navigate("${AddExpensesDestination.route}/$carId/$kind")
+            },
             colors = ButtonDefaults.buttonColors(Color.Cyan),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -112,7 +114,9 @@ fun CarDetailsBody(
         }
 
         Button(
-            onClick = {},
+            onClick = {
+                val kind = "Tolls"
+                navController.navigate("${AddExpensesDestination.route}/$carId/$kind")},
             colors = ButtonDefaults.buttonColors(Color(0xFFB4A235)),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -120,7 +124,10 @@ fun CarDetailsBody(
         }
 
         Button(
-            onClick = {},
+            onClick = {
+                val kind = "Other"
+                navController.navigate("${AddExpensesDestination.route}/$carId/$kind")
+            },
             colors = ButtonDefaults.buttonColors(Color.Black),
             modifier = Modifier.fillMaxWidth()
         ) {

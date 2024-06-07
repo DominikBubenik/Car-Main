@@ -26,24 +26,24 @@ interface CarDao {
     @Query("SELECT * from user_Cars ORDER BY brand ASC")
     fun getAllItems(): Flow<List<Car>>
 
-//    @Insert(onConflict = OnConflictStrategy.IGNORE)
-//    suspend fun insert(expense: Expense)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(expense: Expense)
 
-//    @Update
-//    suspend fun update(expense: Expense)
-//
-//    @Delete
-//    suspend fun delete(expense: Expense)
+    @Update
+    suspend fun update(expense: Expense)
 
-//    @Query("SELECT * FROM car_expenses WHERE id = :id")
-//    fun getExpense(id: Int): Flow<Expense>
-//
-//    @Query("SELECT * FROM car_expenses WHERE car_id = :carId ORDER BY id ASC")
-//    fun getExpensesForCar(carId: Int): Flow<List<Expense>>
-//
-//    @Query("SELECT SUM(value) FROM car_expenses WHERE car_id = :carId")
-//    fun getTotalExpensesForCar(carId: Int): Flow<Int>
-//
-//    @Query("SELECT date FROM car_expenses WHERE id = :expenseId")
-//    fun getExpenseDate(expenseId: Int): Flow<Long>
+    @Delete
+    suspend fun delete(expense: Expense)
+
+    @Query("SELECT * FROM car_expenses WHERE id = :id")
+    fun getExpense(id: Int): Flow<Expense>
+
+    @Query("SELECT * FROM car_expenses WHERE car_id = :carId ORDER BY id ASC")
+    fun getExpensesForCar(carId: Int): Flow<List<Expense>>
+
+    @Query("SELECT SUM(value) FROM car_expenses WHERE car_id = :carId")
+    fun getTotalExpensesForCar(carId: Int): Flow<Int>
+
+    @Query("SELECT date FROM car_expenses WHERE id = :expenseId")
+    fun getExpenseDate(expenseId: Int): Flow<Long>
 }
