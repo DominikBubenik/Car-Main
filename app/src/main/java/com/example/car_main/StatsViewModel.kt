@@ -7,13 +7,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.car_main.data.CarsRepository
+import com.example.car_main.data.Expense
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class StatsViewModel (
+class StatsViewModel(
     savedStateHandle: SavedStateHandle,
     private val carsRepository: CarsRepository,
 ) : ViewModel() {
@@ -34,40 +37,48 @@ class StatsViewModel (
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = ExpensesUiState()
             )
-    var carUiState by mutableStateOf(CarUiState())
+
+    val expensesUiState: StateFlow<List<Expense>> =
+        carsRepository.getAllExpensesForCarStream(carId)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = emptyList()
+            )
+
+
+    var totalExpense: Double by mutableStateOf(0.0)
+        private set
+    var totalExpenseFuel: Double by mutableStateOf(0.0)
+        private set
+    var totalExpenseService: Double by mutableStateOf(0.0)
+        private set
+    var totalExpenseParking: Double by mutableStateOf(0.0)
+        private set
+    var totalExpenseTolls: Double by mutableStateOf(0.0)
+        private set
+    var totalExpenseOther: Double by mutableStateOf(0.0)
         private set
 
-    private fun validateInput(uiState: CarDetails = carUiState.carDetails): Boolean {
-        return with(uiState) {
-            brand.isNotBlank() && model.isNotBlank() && year > 1800 //TODO add more constrains
+    init {
+        viewModelScope.launch {
+            totalExpense = carsRepository.getTotalExpensesForCar(carId).first()
+            totalExpenseFuel = carsRepository.getTotalExpensesKind(carId, "Fuel").first()
+            totalExpenseService = carsRepository.getTotalExpensesKind(carId, "Service").first()
+            totalExpenseParking = carsRepository.getTotalExpensesKind(carId, "Parking").first()
+            totalExpenseTolls = carsRepository.getTotalExpensesKind(carId, "Tolls").first()
+            totalExpenseOther = carsRepository.getTotalExpensesKind(carId, "Other").first()
+            val ee = 0;
         }
     }
 
-    fun updateUiState(carDetails: CarDetails) {
-        carUiState =
-            CarUiState(carDetails = carDetails, isEntryValid = validateInput(carDetails))
-    }
-//    suspend fun updateUiState(carDetails: CarDetails) {
-//        if (validateInput(carUiState.carDetails)) {
-//            carsRepository.updateCar(carUiState.carDetails.toItem())
-//        }
-//    }
-    /**
-     * Reduces the item quantity by one and update the [ItemsRepository]'s data source.
-     */
-//    fun reduceQuantityByOne() {
-//        viewModelScope.launch {
-//            val currentCar = uiState.value.carDetails.toItem()
-//            carsRepository.updateCar(currentCar.copy())
-//        }
-//    }
+    var carUiState by mutableStateOf(CarUiState())
+        private set
 
-    /**
-     * Deletes the item from the [ItemsRepository]'s data source.
-     */
-    suspend fun deleteItem() {
-        carsRepository.deleteCar(uiState.value.carDetails.toItem())
+    fun getCarId(): Int {
+        return carId
     }
+
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
