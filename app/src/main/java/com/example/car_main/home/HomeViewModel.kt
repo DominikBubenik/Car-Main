@@ -19,6 +19,15 @@ class HomeViewModel(private val carsRepository: CarsRepository) : ViewModel() {
                 initialValue = HomeUiState()
             )
 
+    fun getCarId(): Int {
+        val itemList = homeUiState.value.itemList
+        return if (!itemList.isNullOrEmpty()) {
+            itemList.last().id
+        } else {
+            return 0 // Return null if the list is null or empty
+        }
+    }
+
     suspend fun deleteItem(car: Car) {
         carsRepository.deleteCar(car)
     }

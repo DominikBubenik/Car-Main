@@ -22,6 +22,22 @@ object AppViewModelProvider {
             ExpensesMenuViewModel(this.createSavedStateHandle(),
                 inventoryApplication().container.carsRepository)
         }
+
+        initializer {
+            GraphsViewModel(this.createSavedStateHandle(),
+                inventoryApplication().container.carsRepository)
+        }
+
+        initializer {
+            TimeLineViewModel(this.createSavedStateHandle(),
+                inventoryApplication().container.carsRepository)
+        }
+
+        initializer {
+            StatsViewModel(this.createSavedStateHandle(),
+                inventoryApplication().container.carsRepository)
+        }
+
         initializer {
             AddExpenseViewModel(this.createSavedStateHandle(), inventoryApplication().container.carsRepository)
         }

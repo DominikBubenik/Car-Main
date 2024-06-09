@@ -175,37 +175,17 @@ fun AddExpenseBody(
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
-//        DateInputField(
-//            label = "Date",
-//            dateInMillis = expenseDetails.date,
-//            onDateChange = { newDate ->
-//                onExpenseValueChange(expenseDetails.copy(date = newDate.toLong()))
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(72.dp)
-//        )
+        DateInputField(
+            label = "Date",
+            dateInMillis = expenseDetails.date,
+            onDateChange = { newDate ->
+                onExpenseValueChange(expenseDetails.copy(date = newDate.toLong()))
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp)
+        )
 
-//        OutlinedTextField(
-//            value = carId.toString(),
-//            onValueChange = {
-//                onExpenseValueChange(
-//                    expenseDetails.copy(
-//                        carId = carId
-//                    )
-//                )
-//            },
-//            label = { Text(text = "Car ID") },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(72.dp),
-//            singleLine = true,
-//            colors = TextFieldDefaults.outlinedTextFieldColors(
-//                focusedBorderColor = Color.Green,
-//                unfocusedBorderColor = Color.Green
-//            ),
-//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-//        )
 
         Button(
             onClick = onSaveClick,

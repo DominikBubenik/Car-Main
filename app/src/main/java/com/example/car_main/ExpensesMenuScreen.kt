@@ -93,7 +93,7 @@ fun CarDetailsBody(
 
         Button(
             onClick = {
-                val kind = "Servise"
+                val kind = "Service"
                 navController.navigate("${AddExpensesDestination.route}/$carId/$kind")
             },
             colors = ButtonDefaults.buttonColors(Color.Green),

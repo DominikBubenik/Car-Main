@@ -26,7 +26,7 @@ class AddCarViewModel(private val carsRepository: CarsRepository) : ViewModel() 
 
 
     /**
-     * Inserts an [Item] in the Room database
+     *
      */
     suspend fun saveItem() {
         if (validateInput()) {

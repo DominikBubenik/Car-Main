@@ -21,7 +21,10 @@ class StatsViewModel(
     private val carsRepository: CarsRepository,
 ) : ViewModel() {
 
-    private val carId: Int = checkNotNull(savedStateHandle[StatsDestination.carIdArg])
+    //private val carId: Int = checkNotNull(savedStateHandle[StatsDestination.carIdArg])
+    var carId: Int by mutableStateOf(0)
+        private set
+
 
     /**
      * Holds the item details ui state. The data is retrieved from [ItemsRepository] and mapped to
@@ -61,6 +64,7 @@ class StatsViewModel(
         private set
 
     init {
+        carId = checkNotNull(savedStateHandle[StatsDestination.carIdArg])
         viewModelScope.launch {
             totalExpense = carsRepository.getTotalExpensesForCar(carId).first()
             totalExpenseFuel = carsRepository.getTotalExpensesKind(carId, "Fuel").first()
@@ -75,9 +79,9 @@ class StatsViewModel(
     var carUiState by mutableStateOf(CarUiState())
         private set
 
-    fun getCarId(): Int {
-        return carId
-    }
+//    fun getCarId(): Int {
+//        return carId
+//    }
 
 
     companion object {

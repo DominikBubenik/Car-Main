@@ -57,4 +57,8 @@ interface CarsRepository {
      * Update an expense in the data source.
      */
     suspend fun updateExpense(expense: Expense)
+
+    suspend fun getTotalExpensesForCar(carId: Int): Flow<Double>
+
+    suspend fun getTotalExpensesKind(carId: Int, kind: String): Flow<Double>
 }

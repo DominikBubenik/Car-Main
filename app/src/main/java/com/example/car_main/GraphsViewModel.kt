@@ -52,6 +52,9 @@ class GraphsViewModel (
 //            carsRepository.updateCar(carUiState.carDetails.toItem())
 //        }
 //    }
+    fun getCarId(): Int{
+        return carId
+    }
     /**
      * Reduces the item quantity by one and update the [ItemsRepository]'s data source.
      */

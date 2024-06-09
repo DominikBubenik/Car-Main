@@ -38,12 +38,15 @@ interface CarDao {
     @Query("SELECT * FROM car_expenses WHERE id = :id")
     fun getExpense(id: Int): Flow<Expense>
 
-    @Query("SELECT * FROM car_expenses WHERE car_id = :carId ORDER BY id ASC")
+    @Query("SELECT * FROM car_expenses WHERE car_id = :carId ORDER BY date ASC")
     fun getExpensesForCar(carId: Int): Flow<List<Expense>>
 
     @Query("SELECT SUM(value) FROM car_expenses WHERE car_id = :carId")
-    fun getTotalExpensesForCar(carId: Int): Flow<Int>
+    fun getTotalExpensesForCar(carId: Int): Flow<Double>
 
     @Query("SELECT date FROM car_expenses WHERE id = :expenseId")
     fun getExpenseDate(expenseId: Int): Flow<Long>
+
+    @Query("SELECT SUM(value) FROM car_expenses WHERE car_id = :carId AND kind = :kind")
+    fun getTotalExpensesKind(carId: Int, kind: String): Flow<Double>
 }
