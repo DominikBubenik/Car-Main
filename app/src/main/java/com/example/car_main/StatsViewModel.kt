@@ -26,12 +26,6 @@ class StatsViewModel(
 //        private set
     val carId: Int
 
-    /**
-     * Holds the item details ui state. The data is retrieved from [ItemsRepository] and mapped to
-     * the UI state.
-     */
-
-
 
     var totalExpense: Double by mutableStateOf(0.0)
         private set

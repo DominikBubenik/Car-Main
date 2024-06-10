@@ -37,7 +37,7 @@ object StatsDestination : NavigationDestination {
     override val route = "stats"
     override val titleRes = R.string.stats
     const val carIdArg = "carId"
-    val routeWithArgs = "${StatsDestination.route}/{$carIdArg}"
+    val routeWithArgs = "$route/{$carIdArg}"
 }
 
 @Composable
@@ -79,7 +79,7 @@ fun StatsBody(
     carId: Int
 ) {
     val expenses by viewModel.expensesUiState.collectAsState()
-    //var totalExpense by remember { mutableStateOf(0.0) }
+
     val totalExpense = viewModel.totalExpense
     val totalExpenseFuel = viewModel.totalExpenseFuel
     val totalExpenseService = viewModel.totalExpenseService
