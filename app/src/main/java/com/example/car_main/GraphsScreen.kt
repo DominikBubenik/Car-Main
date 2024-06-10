@@ -12,19 +12,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.car_main.home.MyTopAppBar
 import com.example.car_main.home.TopFourButtons
 import com.example.car_main.navigation.NavigationDestination
-import com.example.car_main.ui.theme.CarMainTheme
 
 object GraphDestination : NavigationDestination {
     override val route = "graphs"
@@ -39,7 +35,7 @@ fun GraphsScreen(
     navController: NavHostController
 )
 {
-    val carId = viewModel.getCarId()
+    val carId = viewModel.carId
     BackHandler {
         navigateBack()
     }
@@ -47,13 +43,6 @@ fun GraphsScreen(
         topBar = { TopFourButtons(navController = navController, carId) },
 
         ) {innerPadding ->
-        Text(
-            text = "Car ID:", // $carId
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
         GraphsBody( modifier = Modifier
             .padding(
                 start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),

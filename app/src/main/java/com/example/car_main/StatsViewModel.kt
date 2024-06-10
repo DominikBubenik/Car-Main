@@ -22,32 +22,15 @@ class StatsViewModel(
 ) : ViewModel() {
 
     //private val carId: Int = checkNotNull(savedStateHandle[StatsDestination.carIdArg])
-    var carId: Int by mutableStateOf(0)
-        private set
-
+//    var carId: Int by mutableStateOf(0)
+//        private set
+    val carId: Int
 
     /**
      * Holds the item details ui state. The data is retrieved from [ItemsRepository] and mapped to
      * the UI state.
      */
-    val uiState: StateFlow<ExpensesUiState> =
-        carsRepository.getCarStream(carId)
-            .filterNotNull()
-            .map {
-                ExpensesUiState(carDetails = it.toCarDetails())
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = ExpensesUiState()
-            )
 
-    val expensesUiState: StateFlow<List<Expense>> =
-        carsRepository.getAllExpensesForCarStream(carId)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = emptyList()
-            )
 
 
     var totalExpense: Double by mutableStateOf(0.0)
@@ -75,6 +58,24 @@ class StatsViewModel(
             val ee = 0;
         }
     }
+    val uiState: StateFlow<ExpensesUiState> =
+        carsRepository.getCarStream(carId)
+            .filterNotNull()
+            .map {
+                ExpensesUiState(carDetails = it.toCarDetails())
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = ExpensesUiState()
+            )
+
+    val expensesUiState: StateFlow<List<Expense>> =
+        carsRepository.getAllExpensesForCarStream(carId)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = emptyList()
+            )
 
     var carUiState by mutableStateOf(CarUiState())
         private set

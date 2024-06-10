@@ -47,14 +47,14 @@ fun StatsScreen(
     navController: NavHostController
 ) {
     //val carId = viewModel.getCarId()
-    val _carId = viewModel.carId
+    val carId = viewModel.carId
 
 
     BackHandler {
         navigateBack()
     }
     Scaffold(
-        topBar = { TopFourButtons(navController = navController, _carId) },
+        topBar = { TopFourButtons(navController = navController, carId) },
 
         ) { innerPadding ->
         StatsBody(
@@ -67,7 +67,7 @@ fun StatsScreen(
                 .verticalScroll(rememberScrollState())
                 .fillMaxWidth(),
             viewModel = viewModel,
-            carId = _carId
+            carId = carId
         )
     }
 }
