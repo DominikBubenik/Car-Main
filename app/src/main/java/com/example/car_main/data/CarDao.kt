@@ -23,6 +23,12 @@ interface CarDao {
     @Query("SELECT * from user_Cars WHERE id = :id")
     fun getItem(id: Int): Flow<Car>
 
+    @Query("SELECT * from user_Cars WHERE isActive = true LIMIT 1")
+    suspend fun getActiveCar(): Car?
+
+    @Query("UPDATE user_Cars SET isActive = :value WHERE id = :id")
+    suspend fun updateActiveCar(id: Int, value: Boolean)
+
     @Query("SELECT * from user_Cars ORDER BY brand ASC")
     fun getAllItems(): Flow<List<Car>>
 

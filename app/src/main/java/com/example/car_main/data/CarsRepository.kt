@@ -31,6 +31,10 @@ interface CarsRepository {
      */
     suspend fun updateCar(car: Car)
 
+    suspend fun getActiveCar(): Car?
+
+    suspend fun setActiveCar(carId: Int, value: Boolean)
+
     /**
      * Retrieve all the expenses from the given data source for a specific car.
      */

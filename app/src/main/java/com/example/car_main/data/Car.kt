@@ -12,7 +12,7 @@ data class Car(
     val year: Int = 0,
     val licenceNum: String = "",
     val fuelType: String = "",
-    var isActive: Boolean = false
-    , val imageUri: String? = ""
+    var isActive: Boolean = false,
+    val imageUri: String? = ""
 )
 
