@@ -136,6 +136,15 @@ private fun CarCardList(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    if (itemList.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "No cars available")
+        }
+    }
+    
     LazyColumn(
         modifier = modifier,
         contentPadding = contentPadding
@@ -174,7 +183,7 @@ fun CarCard(
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    if (car.imageUri?.isEmpty() != true) {
+                    if (car.imageUri != "null") {
                         val imagePath = car.imageUri
                         val uri = Uri.parse(imagePath)
                         Image(
@@ -187,7 +196,7 @@ fun CarCard(
                         )
                     } else {
                         Image(
-                            painter = painterResource(id = R.drawable.my_car),
+                            painter = painterResource(id = R.drawable.default_car),
                             contentDescription = "Car Image",
                             modifier = Modifier
                                 .fillMaxWidth()

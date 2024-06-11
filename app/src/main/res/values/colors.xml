@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="ParkingColor">#3FEFEC</color>
     <color name="TollsColor">#B4A235</color>
+    <color name="GraphLine">#32D1F5</color>
 
 </resources>
