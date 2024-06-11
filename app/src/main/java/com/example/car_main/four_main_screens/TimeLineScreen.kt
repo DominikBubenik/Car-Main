@@ -104,13 +104,24 @@ fun TimeLineBody(modifier: Modifier = Modifier, viewModel: TimeLineViewModel, ca
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             )
-            Text(
-                text = "Time Line---------------------------------------",
-                style = MaterialTheme.typography.bodyLarge,
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
-            )
+            ) {
+                Text(
+                    text = "Timeline",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                )
+                Divider(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp, end = 10.dp)
+                        .align(Alignment.CenterVertically),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
 
             expenses.reversed().forEach { expense ->
                 TimeLineRow(expense)
