@@ -12,6 +12,7 @@ import com.example.car_main.add_screens.ExpensesUiState
 import com.example.car_main.add_screens.toCarDetails
 import com.example.car_main.add_screens.toItem
 import com.example.car_main.data.CarsRepository
+import com.example.car_main.data.Expense
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -25,6 +26,9 @@ class GraphsViewModel (
 
     var carId: Int by mutableStateOf(0)
         private set
+    init {
+        carId = checkNotNull(savedStateHandle[GraphDestination.carIdArg])
+    }
     //private val carId: Int = checkNotNull(savedStateHandle[GraphDestination.carIdArg])
 
     /**
@@ -41,12 +45,20 @@ class GraphsViewModel (
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = ExpensesUiState()
             )
+
+    val expensesUiState: StateFlow<List<Expense>> =
+        carsRepository.getAllExpensesForCarStream(carId)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = emptyList()
+            )
+
+
     var carUiState by mutableStateOf(CarUiState())
         private set
 
-    init {
-        carId = checkNotNull(savedStateHandle[GraphDestination.carIdArg])
-    }
+
 
     private fun validateInput(uiState: CarDetails = carUiState.carDetails): Boolean {
         return with(uiState) {
