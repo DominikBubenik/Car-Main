@@ -54,6 +54,9 @@ object GraphDestination : NavigationDestination {
     val routeWithArgs = "$route/{$carIdArg}"
 }
 
+/**
+ * screen displays expenses in graphs
+ */
 @Composable
 fun GraphsScreen(
     navigateBack: () -> Unit,
@@ -75,8 +78,6 @@ fun GraphsScreen(
                     top = innerPadding.calculateTopPadding(),
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                 )
-//                .verticalScroll()
-//                .horizontalScroll(rememberScrollState())
                 .fillMaxWidth(),
             viewModel = viewModel,
             carId
@@ -92,9 +93,9 @@ fun GraphsBody(
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize()  // Ensure the Box takes up the entire screen
+            .fillMaxSize()
             .padding(1.dp),
-        contentAlignment = Alignment.CenterStart  // Center the content within the Box
+        contentAlignment = Alignment.CenterStart
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -129,7 +130,6 @@ fun GraphsBody(
             }
             TotalExpenseChart(modifier = Modifier
                 .fillMaxWidth()
-                //.verticalScroll(rememberScrollState())
                 , viewModel = viewModel)
         }
 
@@ -143,7 +143,7 @@ fun ExpenseChart(modifier: Modifier, viewModel: GraphsViewModel) {
     val expenses by viewModel.expensesUiState.collectAsState()
     if (expenses.isEmpty()) return
     val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
-    //val formattedDate = dateFormat.format(Date(expense.date))
+
 
     val pointsData = expenses.mapIndexed { index, expense ->
         co.yml.charts.common.model.Point(index.toFloat() * 10, expense.value.toFloat())
@@ -152,7 +152,7 @@ fun ExpenseChart(modifier: Modifier, viewModel: GraphsViewModel) {
     val xAxisData = AxisData.Builder()
         .axisStepSize(10.dp)
         .steps(expenses.size - 1)
-        .labelData { i ->  expenses.getOrNull(i/10)?.date?.let {dateFormat.format(Date(it)) } ?: "" } //dateFormat.format(Date(expenses.getOrNull(i)?.date)) expenses.getOrNull(i)?.date?.let {dateFormat.format(Date(it)) } ?: ""
+        .labelData { i ->  expenses.getOrNull(i/10)?.date?.let {dateFormat.format(Date(it)) } ?: "" }
         .labelAndAxisLinePadding(15.dp)
         .build()
 
@@ -217,7 +217,7 @@ fun TotalExpenseChart(modifier: Modifier, viewModel: GraphsViewModel) {
     val xAxisData = AxisData.Builder()
         .axisStepSize(10.dp)
         .steps(expenses.size - 1)
-        .labelData { i ->  expenses.getOrNull(i/10)?.date?.let {dateFormat.format(Date(it)) } ?: "" } //dateFormat.format(Date(expenses.getOrNull(i)?.date)) expenses.getOrNull(i)?.date?.let {dateFormat.format(Date(it)) } ?: ""
+        .labelData { i ->  expenses.getOrNull(i/10)?.date?.let {dateFormat.format(Date(it)) } ?: "" }
         .labelAndAxisLinePadding(15.dp)
         .build()
 
