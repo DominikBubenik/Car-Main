@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import co.yml.charts.axis.AxisData
+import co.yml.charts.common.model.Point
 import co.yml.charts.ui.linechart.LineChart
 import co.yml.charts.ui.linechart.model.GridLines
 import co.yml.charts.ui.linechart.model.IntersectionPoint
@@ -43,6 +44,7 @@ import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.example.car_main.AppViewModelProvider
 import com.example.car_main.R
 import com.example.car_main.TopFourButtons
+import com.example.car_main.data.Expense
 import com.example.car_main.navigation.NavigationDestination
 import java.text.DateFormat
 import java.util.Date
@@ -91,6 +93,7 @@ fun GraphsBody(
     viewModel: GraphsViewModel,
     carId: Int
 ) {
+    val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -109,7 +112,7 @@ fun GraphsBody(
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            ExpenseChart(modifier = Modifier.fillMaxWidth(), viewModel = viewModel)
+            ExpenseChart(modifier = Modifier.fillMaxWidth(), viewModel = viewModel, dateFormat = dateFormat)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -130,7 +133,9 @@ fun GraphsBody(
             }
             TotalExpenseChart(modifier = Modifier
                 .fillMaxWidth()
-                , viewModel = viewModel)
+                , viewModel = viewModel,
+                dateFormat = dateFormat
+            )
         }
 
     }
@@ -138,25 +143,16 @@ fun GraphsBody(
 }
 
 @Composable
-fun ExpenseChart(modifier: Modifier, viewModel: GraphsViewModel) {
+fun ExpenseChart(modifier: Modifier, viewModel: GraphsViewModel, dateFormat: DateFormat) {
     val steps = 10
     val expenses by viewModel.expensesUiState.collectAsState()
     if (expenses.isEmpty()) return
-    val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
-
 
     val pointsData = expenses.mapIndexed { index, expense ->
         co.yml.charts.common.model.Point(index.toFloat() * 10, expense.value.toFloat())
     }
 
-    val xAxisData = AxisData.Builder()
-        .axisStepSize(10.dp)
-        .steps(expenses.size - 1)
-        .labelData { i ->  expenses.getOrNull(i/10)?.date?.let {dateFormat.format(Date(it)) } ?: "" }
-        .labelAndAxisLinePadding(15.dp)
-        .build()
-
-
+    val xAxisData = getXAxis(expenses = expenses, dateFormat = dateFormat)
 
     val yAxisData = AxisData.Builder()
         .steps(steps)
@@ -167,7 +163,13 @@ fun ExpenseChart(modifier: Modifier, viewModel: GraphsViewModel) {
         }
         .build()
 
-    val lineChartData = LineChartData(
+    val lineChartData = getLineChartData(pointsData = pointsData, xAxisData = xAxisData, yAxisData = yAxisData)
+    LineChart(modifier = modifier.heightIn(max = 400.dp) , lineChartData = lineChartData)
+}
+
+@Composable
+fun getLineChartData(pointsData: List<Point>, xAxisData: AxisData, yAxisData: AxisData): LineChartData{
+    return LineChartData(
         linePlotData = LinePlotData(
             lines = listOf(
                 Line(
@@ -198,30 +200,22 @@ fun ExpenseChart(modifier: Modifier, viewModel: GraphsViewModel) {
         yAxisData = yAxisData,
         gridLines = GridLines(color = MaterialTheme.colorScheme.outline)
     )
-    LineChart(modifier = modifier.heightIn(max = 400.dp) , lineChartData = lineChartData)
 }
 
 @Composable
-fun TotalExpenseChart(modifier: Modifier, viewModel: GraphsViewModel) {
+fun TotalExpenseChart(modifier: Modifier, viewModel: GraphsViewModel, dateFormat: DateFormat) {
     val steps = 10
     var sum: Double = 0.0
     val expenses by viewModel.expensesUiState.collectAsState()
     if (expenses.isEmpty()) return
-    val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
+
 
     val pointsData = expenses.mapIndexed { index, expense ->
         sum += expense.value
         co.yml.charts.common.model.Point(index.toFloat() * 10, sum.toFloat())
     }
 
-    val xAxisData = AxisData.Builder()
-        .axisStepSize(10.dp)
-        .steps(expenses.size - 1)
-        .labelData { i ->  expenses.getOrNull(i/10)?.date?.let {dateFormat.format(Date(it)) } ?: "" }
-        .labelAndAxisLinePadding(15.dp)
-        .build()
-
-
+    val xAxisData = getXAxis(expenses = expenses, dateFormat = dateFormat)
 
     val yAxisData = AxisData.Builder()
         .steps(steps)
@@ -232,38 +226,18 @@ fun TotalExpenseChart(modifier: Modifier, viewModel: GraphsViewModel) {
         }
         .build()
 
-    val lineChartData = LineChartData(
-        linePlotData = LinePlotData(
-            lines = listOf(
-                Line(
-                    dataPoints = pointsData,
-                    LineStyle(
-                        color = Color.Blue,
-                        lineType = LineType.Straight(isDotted = false)
-                    ),
-                    IntersectionPoint(
-                        color = Color.Blue
-                    ),
-                    SelectionHighlightPoint(color = MaterialTheme.colorScheme.primary),
-                    ShadowUnderLine(
-                        alpha = 0.5f,
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Transparent
-                            )
-                        )
-                    ),
-                    SelectionHighlightPopUp()
-                )
-            )
-        ),
-        backgroundColor = MaterialTheme.colorScheme.surface,
-        xAxisData = xAxisData,
-        yAxisData = yAxisData,
-        gridLines = GridLines(color = MaterialTheme.colorScheme.outline)
-    )
+    val lineChartData = getLineChartData(pointsData = pointsData, xAxisData = xAxisData, yAxisData = yAxisData)
     LineChart(modifier = modifier.heightIn(max = 400.dp) , lineChartData = lineChartData)
+}
+
+@Composable
+fun getXAxis(expenses: List<Expense>, dateFormat: DateFormat): AxisData {
+    return AxisData.Builder()
+        .axisStepSize(10.dp)
+        .steps(expenses.size - 1)
+        .labelData { i ->  expenses.getOrNull(i/10)?.date?.let {dateFormat.format(Date(it)) } ?: "" }
+        .labelAndAxisLinePadding(15.dp)
+        .build()
 }
 
 
