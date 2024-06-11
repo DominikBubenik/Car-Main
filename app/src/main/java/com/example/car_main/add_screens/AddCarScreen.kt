@@ -16,7 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -92,7 +93,6 @@ fun AddCarScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCarBody(
     carUiState: CarUiState,
@@ -100,7 +100,7 @@ fun AddCarBody(
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var carDetails = carUiState.carDetails
+    val carDetails = carUiState.carDetails
     var selectedImageUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -190,7 +190,10 @@ fun AddCarBody(
             )
         )
 
-        Button(onClick = { launcher.launch("image/*") }) {
+        Button(
+            onClick = { launcher.launch("image/*") },
+            colors = ButtonDefaults.buttonColors(Green, contentColor = Color.White)
+        ) {
             Text(text = "Choose Image")
         }
         if (selectedImageUri != null) {
@@ -201,13 +204,14 @@ fun AddCarBody(
             )
         }
 
-        var finalUri = saveImageToInternalStorage(context,selectedImageUri)
+        val finalUri = saveImageToInternalStorage(context,selectedImageUri)
         onCarValueChange(carDetails.copy(imageUri = finalUri.toString()))
 
         Button(
             onClick = onSaveClick ,
             enabled = carUiState.isEntryValid,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(Green, contentColor = Color.White)
         ) {
             Text(text = "Save Car")
         }

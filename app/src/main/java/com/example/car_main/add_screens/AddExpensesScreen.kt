@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -105,6 +106,7 @@ fun AddExpenseBody(
         modifier = modifier.padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
+
         OutlinedTextField(
             value = expenseDetails.value.toString(),
             onValueChange = {
@@ -136,7 +138,8 @@ fun AddExpenseBody(
         Button(
             onClick = onSaveClick,
             enabled = expenseUiState.isEntryValid,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(Color.Green, contentColor = Color.White)
         ) {
             Text(text = "Add Expense")
         }
