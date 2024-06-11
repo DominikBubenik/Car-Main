@@ -2,38 +2,40 @@ package com.example.car_main.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.car_main.add_screens.AddCarDestination
+import com.example.car_main.add_screens.AddCarScreen
+import com.example.car_main.add_screens.AddExpensesDestination
+import com.example.car_main.add_screens.AddExpensesScreen
+import com.example.car_main.add_screens.ExpensesMenuDestination
+import com.example.car_main.add_screens.ExpensesMenuScreen
+import com.example.car_main.four_main_screens.GraphDestination
+import com.example.car_main.four_main_screens.GraphsScreen
+import com.example.car_main.four_main_screens.StatsDestination
+import com.example.car_main.four_main_screens.StatsScreen
+import com.example.car_main.four_main_screens.TimeLineDestination
+import com.example.car_main.four_main_screens.TimeLineScreen
+import com.example.car_main.four_main_screens.HomeDestination
+import com.example.car_main.four_main_screens.HomeScreen
 
-import com.example.car_main.AddCarDestination
-import com.example.car_main.AddCarScreen
-import com.example.car_main.AddExpensesDestination
-import com.example.car_main.AddExpensesScreen
-import com.example.car_main.ExpensesMenuDestination
-import com.example.car_main.ExpensesMenuScreen
-import com.example.car_main.GraphDestination
-import com.example.car_main.GraphsScreen
-import com.example.car_main.home.HomeDestination
-import com.example.car_main.home.HomeScreen
-import com.example.car_main.StatsDestination
-import com.example.car_main.StatsScreen
-import com.example.car_main.TimeLineDestination
-import com.example.car_main.TimeLineScreen
-
+/**
+ * provides navigation in the whole app
+ * src for template: https://developer.android.com/codelabs/basic-android-kotlin-compose-persisting-data-room#0
+ */
 @Composable
 fun Navigation(
-    navController: NavHostController,
-    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
         startDestination = HomeDestination.route,
         modifier = Modifier
     ) {
+
         /**
          * navigation for Home screen
          */
@@ -45,7 +47,6 @@ fun Navigation(
                 },
                 navController = navController)
         }
-
 
         /**
          * navigation for AddCar screen
@@ -86,7 +87,7 @@ fun Navigation(
         }
 
         /**
-         * navigation for Graph screen
+         * navigation for Graphs screen
          */
         composable(
             route = GraphDestination.routeWithArgs,
@@ -112,6 +113,10 @@ fun Navigation(
                 navigateBack = { navController.popBackStack() },
                 navController = navController)
         }
+
+        /**
+         * navigation for AddExpense screen
+         */
         composable(
             route = AddExpensesDestination.routeWithArgs,
             arguments = listOf(
@@ -123,17 +128,5 @@ fun Navigation(
                 navigateBack = { navController.popBackStack() },
                 navController = navController)
         }
-        composable(
-            route = AddExpensesDestination.routeWithArgs,
-            arguments = listOf(navArgument(AddExpensesDestination.carIdArg) {
-                type = NavType.IntType
-            })
-        ) {
-            AddExpensesScreen(
-                navigateBack = { navController.popBackStack() },
-                navController = navController)
-        }
-
     }
-
 }

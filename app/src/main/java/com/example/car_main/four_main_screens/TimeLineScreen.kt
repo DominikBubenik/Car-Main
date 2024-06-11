@@ -1,6 +1,6 @@
-package com.example.car_main
+package com.example.car_main.four_main_screens
 
-//import androidx.compose.foundation.lazy.LazyColumn
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -36,8 +36,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.car_main.AppViewModelProvider
+import com.example.car_main.R
+import com.example.car_main.TopFourButtons
 import com.example.car_main.data.Expense
-import com.example.car_main.home.TopFourButtons
 import com.example.car_main.navigation.NavigationDestination
 import java.text.DateFormat
 import java.util.Date
@@ -77,15 +79,18 @@ fun TimeLineScreen(
     }
 }
 
+/**
+ * representation of timeline
+ */
 @Composable
-fun TimeLineBody(modifier: Modifier = Modifier,viewModel: TimeLineViewModel, carId: Int) {
+fun TimeLineBody(modifier: Modifier = Modifier, viewModel: TimeLineViewModel, carId: Int) {
     val expenses by viewModel.expensesUiState.collectAsState()
 
     Box(
         modifier = modifier
-            .fillMaxSize()  // Ensure the Box takes up the entire screen
+            .fillMaxSize()
             .padding(16.dp),
-        contentAlignment = Alignment.Center  // Center the content within the Box
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
@@ -115,6 +120,9 @@ fun TimeLineBody(modifier: Modifier = Modifier,viewModel: TimeLineViewModel, car
     }
 }
 
+/**
+ * one level of timeline
+ */
 @Composable
 fun TimeLineRow(expense: Expense) {
     val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
@@ -154,13 +162,13 @@ fun TimeLineRow(expense: Expense) {
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = expense.value.toString(),
+            text = "${String.format("%.2f",expense.value)}€",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.End,
             modifier = Modifier.width(100.dp)
         )
-
     }
+
     Row(
         modifier = Modifier
             .fillMaxHeight()
@@ -173,7 +181,7 @@ fun TimeLineRow(expense: Expense) {
             modifier = Modifier
                 .fillMaxHeight()
                 .height(30.dp)
-                .width(3.dp), // Adjust the height as needed
+                .width(3.dp),
             color = color
         )
     }

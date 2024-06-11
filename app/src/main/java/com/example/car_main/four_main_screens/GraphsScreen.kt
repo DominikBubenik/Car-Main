@@ -1,4 +1,4 @@
-package com.example.car_main
+package com.example.car_main.four_main_screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
@@ -19,14 +19,16 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.car_main.home.TopFourButtons
+import com.example.car_main.AppViewModelProvider
+import com.example.car_main.R
+import com.example.car_main.TopFourButtons
 import com.example.car_main.navigation.NavigationDestination
 
 object GraphDestination : NavigationDestination {
     override val route = "graphs"
     override val titleRes = R.string.graphs
     const val carIdArg = "carId"
-    val routeWithArgs = "${GraphDestination.route}/{$carIdArg}"
+    val routeWithArgs = "$route/{$carIdArg}"
 }
 @Composable
 fun GraphsScreen(
@@ -66,6 +68,8 @@ fun GraphsBody(modifier: Modifier = Modifier, carId: Int) {
             text = "Car ID: $carId",
             style = MaterialTheme.typography.bodyLarge,
         )
+
+
     }
 
 }

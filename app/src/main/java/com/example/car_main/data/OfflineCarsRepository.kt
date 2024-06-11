@@ -1,8 +1,6 @@
 package com.example.car_main.data
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 class OfflineCarsRepository(private val carDao: CarDao) : CarsRepository {
     override fun getAllCarsStream(): Flow<List<Car>> = carDao.getAllItems()
@@ -22,6 +20,10 @@ class OfflineCarsRepository(private val carDao: CarDao) : CarsRepository {
     override fun getExpenseDate(id: Int): Flow<Long?> = carDao.getExpenseDate(id)
 
     override suspend fun insertExpense(expense: Expense) = carDao.insert(expense)
+
+    override suspend fun getActiveCar(): Car? = carDao.getActiveCar()
+
+    override suspend fun setActiveCar(carId: Int, value: Boolean) = carDao.updateActiveCar(carId, value)
 
     override suspend fun deleteExpense(expense: Expense) = carDao.delete(expense)
 

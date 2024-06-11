@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.car_main"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -101,6 +101,9 @@ dependencies {
 
     //implementation("io.coil-kt:coil-composse:2.2.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //YCharts
+    implementation("co.yml:ycharts:2.1.0")
 }
 
 

@@ -15,130 +15,16 @@
  */
 package com.example.car_main
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
-import com.example.car_main.navigation.Navigation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        //enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        //WindowCompat.setDecorFitsSystemWindows(window,false)
+
         setContent {
             CarMainApp()
         }
     }
 }
-
-
-
-
-
-
-@Composable
-fun ShowImageUploadDialog() {
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            // Handle the returned data, such as retrieving the selected image URI
-            val selectedImageUri = data?.data
-            // Process the selected image
-            // For example, you can display it in an ImageView or upload it to a server
-        }
-    }
-
-    AlertDialog.Builder(context)
-        .setTitle("Upload Image")
-        .setMessage("Select an image from the gallery")
-        .setPositiveButton("Gallery") { _, _ ->
-            // Open the gallery when the user clicks the "Gallery" button
-            val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            launcher.launch(galleryIntent)
-        }
-        .setNegativeButton("Cancel", null)
-        .show()
-}
-
-
-/*
-fun FourButtonsInVerticalLine(context: Context) {
-    Row (
-        modifier = Modifier.fillMaxWidth()
-            .background(Color.Green)
-            .padding(top = 40.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ){
-
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .height(64.dp), // Distribute available width equally among buttons
-            colors = ButtonDefaults.buttonColors(Color.Gray),
-            shape = RoundedCornerShape(8.dp),
-            content = { Text(text = "Menu") }
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Button(
-            onClick = {
-                context.startActivity(Intent(context, Graphs::class.java))
-            },
-            modifier = Modifier
-                .height(64.dp), // Distribute available width equally among buttons
-            colors = ButtonDefaults.buttonColors(Color.Gray),
-            shape = RoundedCornerShape(8.dp),
-            content = { Text(text = "Graphs", textAlign = TextAlign.Center, maxLines = 1, overflow = TextOverflow.Ellipsis) }
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Button(
-            onClick = {
-                context.startActivity(Intent(context, TimeLine::class.java))
-            },
-            modifier = Modifier
-                .height(64.dp), // Distribute available width equally among buttons
-            colors = ButtonDefaults.buttonColors(Color.Gray),
-            shape = RoundedCornerShape(8.dp),
-            content = { Text(text = "Time Line", textAlign = TextAlign.Center) }
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .height(64.dp), // Distribute available width equally among buttons
-            colors = ButtonDefaults.buttonColors(Color.Gray),
-            shape = RoundedCornerShape(8.dp),
-            content = { Text(text = "Stats", textAlign = TextAlign.Center) }
-        )
-    }
-}
-*/

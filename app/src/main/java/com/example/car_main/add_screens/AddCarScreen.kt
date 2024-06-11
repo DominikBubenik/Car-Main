@@ -1,7 +1,6 @@
-package com.example.car_main
+package com.example.car_main.add_screens
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,9 +18,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,8 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberImagePainter
-import com.example.car_main.home.MyTopAppBar
+import coil.compose.rememberAsyncImagePainter
+import com.example.car_main.AppViewModelProvider
+import com.example.car_main.MyTopAppBar
+import com.example.car_main.R
 import com.example.car_main.navigation.NavigationDestination
 import kotlinx.coroutines.launch
 import java.io.File
@@ -51,7 +52,7 @@ object AddCarDestination : NavigationDestination {
     override val titleRes = R.string.car_add
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun AddCarScreen(
     navigateBack: () -> Unit,
@@ -104,16 +105,11 @@ fun AddCarBody(
         mutableStateOf<Uri?>(null)
     }
     val context = LocalContext.current
-    val bitmap = remember {
-        mutableStateOf<Bitmap?>(null)
-    }
+
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){
         uri -> selectedImageUri = uri
     }
-//    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.PickVisualMedia(),
-//        onResult = {uri ->  selectedImageUri = uri}
-//    )
+
 
     Column(
         modifier = modifier.padding(10.dp),
@@ -124,12 +120,12 @@ fun AddCarBody(
             onValueChange = { onCarValueChange(carDetails.copy(brand = it)) },
             label = { Text(text = "Brand") },
             modifier = Modifier
-                .fillMaxWidth() // Fill the available width
+                .fillMaxWidth()
                 .height(72.dp),
             singleLine = true,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Green,
-                unfocusedBorderColor = Green
+                unfocusedBorderColor = Green,
             )
         )
 
@@ -138,48 +134,16 @@ fun AddCarBody(
             onValueChange = { onCarValueChange(carDetails.copy(model = it)) },
             label = { Text(text = "Model") },
             modifier = Modifier
-                .fillMaxWidth() // Fill the available width
+                .fillMaxWidth()
                 .height(72.dp),
             singleLine = true,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Green,
-                unfocusedBorderColor = Green
+                unfocusedBorderColor = Green,
             )
         )
         var yearText by remember { mutableStateOf(TextFieldValue("")) }
 
-//        LazyColumn(
-//            modifier = Modifier.weight(1f), // Fill remaining height
-//            contentPadding = PaddingValues(vertical = 10.dp)
-//        ) {
-//            item {
-//                Button(onClick = {
-//                    singlePhotoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-//                }
-//                , colors = ButtonDefaults.buttonColors( Color.Red, contentColor = Color.White)
-//                ) {
-//                    Text(text = "Choose a Photo", color = Color.Red)
-//                }
-//            }
-//            item {
-//                selectedImageUri?.let { uri ->
-//                    AsyncImage(
-//                        model = uri,
-//                        contentDescription = null,
-//                        modifier = Modifier.fillMaxWidth(),
-//                        contentScale = ContentScale.Crop
-//                    )
-//                }
-//            }
-//            item {
-//                AsyncImage(
-//                    model = selectedImageUri,
-//                    contentDescription = null,
-//                    modifier = Modifier.fillMaxWidth(),
-//                    contentScale = ContentScale.Crop
-//                )
-//            }
-//        }
         OutlinedTextField(
             value = yearText,
             onValueChange = {
@@ -189,12 +153,40 @@ fun AddCarBody(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             label = { Text(text = "Year") },
             modifier = Modifier
-                .fillMaxWidth() // Fill the available width
+                .fillMaxWidth()
                 .height(72.dp),
             singleLine = true,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Green,
-                unfocusedBorderColor = Green
+                unfocusedBorderColor = Green,
+            )
+        )
+
+        OutlinedTextField(
+            value = carDetails.licenceNum,
+            onValueChange = { onCarValueChange(carDetails.copy(licenceNum = it)) },
+            label = { Text(text = "Licence Number") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Green,
+                unfocusedBorderColor = Green,
+            )
+        )
+
+        OutlinedTextField(
+            value = carDetails.fuelType,
+            onValueChange = { onCarValueChange(carDetails.copy(fuelType = it)) },
+            label = { Text(text = "Fuel Type") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Green,
+                unfocusedBorderColor = Green,
             )
         )
 
@@ -203,13 +195,12 @@ fun AddCarBody(
         }
         if (selectedImageUri != null) {
             Image(
-                painter = rememberImagePainter(selectedImageUri),
+                painter = rememberAsyncImagePainter(selectedImageUri),
                 contentDescription = "Selected Image",
                 modifier = Modifier.fillMaxWidth().height(200.dp)
             )
-
-
         }
+
         var finalUri = saveImageToInternalStorage(context,selectedImageUri)
         onCarValueChange(carDetails.copy(imageUri = finalUri.toString()))
 
@@ -224,13 +215,16 @@ fun AddCarBody(
 
 }
 
+/**
+ * saving image to internal storage
+ */
 fun saveImageToInternalStorage(context: Context, imageUri: Uri?): Uri? {
     if (imageUri == null) return null
     val inputStream = context.contentResolver.openInputStream(imageUri)
     inputStream?.use { input ->
         val directory = File(context.filesDir, "car_images")
         if (!directory.exists()) {
-            directory.mkdirs() // Create the directory if it doesn't exist
+            directory.mkdirs()
         }
         val fileName = "image_${System.currentTimeMillis()}.jpg" // Generate a unique file name
         val outputFile = File(directory, fileName)

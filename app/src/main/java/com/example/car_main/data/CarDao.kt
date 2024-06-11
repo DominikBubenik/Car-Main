@@ -8,7 +8,9 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
-
+/**
+ * interface contains standard SQL queries for interaction with database
+ */
 @Dao
 interface CarDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -23,7 +25,7 @@ interface CarDao {
     @Query("SELECT * from user_Cars WHERE id = :id")
     fun getItem(id: Int): Flow<Car>
 
-    @Query("SELECT * from user_Cars WHERE isActive = true LIMIT 1")
+    @Query("SELECT * from user_Cars WHERE isActive = 1 LIMIT 1")
     suspend fun getActiveCar(): Car?
 
     @Query("UPDATE user_Cars SET isActive = :value WHERE id = :id")

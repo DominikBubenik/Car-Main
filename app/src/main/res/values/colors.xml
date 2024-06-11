@@ -8,5 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="ParkingColor">#3FEFEC</color>
+    <color name="TollsColor">#B4A235</color>
 
 </resources>

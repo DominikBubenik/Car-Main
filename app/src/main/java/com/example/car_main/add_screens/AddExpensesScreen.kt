@@ -1,16 +1,10 @@
-package com.example.car_main
+package com.example.car_main.add_screens
 
 import android.app.DatePickerDialog
-import android.os.Build
-import android.text.format.DateUtils
-import android.widget.DatePicker
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,33 +14,27 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
-import androidx.compose.material3.DatePickerFormatter
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.KeyboardType
-
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.car_main.home.MyTopAppBar
+import com.example.car_main.AppViewModelProvider
+import com.example.car_main.MyTopAppBar
+import com.example.car_main.R
 import com.example.car_main.navigation.NavigationDestination
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -60,7 +48,7 @@ object AddExpensesDestination : NavigationDestination {
     override val titleRes = R.string.car_add_epenses
     const val carIdArg = "carId"
     const val kindArg = "kind"
-    val routeWithArgs = "${AddExpensesDestination.route}/{$carIdArg}/{$kindArg}"
+    val routeWithArgs = "$route/{$carIdArg}/{$kindArg}"
 }
 
 @Composable
@@ -69,10 +57,8 @@ fun AddExpensesScreen(
     viewModel: AddExpenseViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController
 ) {
-
-    val uiState = viewModel.uiState.collectAsState()
-    var carId = uiState.value.carDetails.id
     val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             MyTopAppBar(
@@ -84,8 +70,6 @@ fun AddExpensesScreen(
 
         ) { innerPadding ->
         AddExpenseBody(
-            carId = carId,
-            viewModel = viewModel,
             expenseUiState = viewModel.expenseUiState,
             onExpenseValueChange = viewModel::updateUiState,
             onSaveClick = {
@@ -108,11 +92,8 @@ fun AddExpensesScreen(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseBody(
-    carId: Int,
-    viewModel: AddExpenseViewModel,
     expenseUiState: ExpenseUiState,
     onExpenseValueChange: (ExpenseDetails) -> Unit = {},
     onSaveClick: () -> Unit,
@@ -134,70 +115,34 @@ fun AddExpenseBody(
                 .fillMaxWidth()
                 .height(72.dp),
             singleLine = true,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.Green,
-                unfocusedBorderColor = Color.Green
+                unfocusedBorderColor = Color.Green,
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
-//        OutlinedTextField(
-//            value = expenseDetails.kind,
-//            onValueChange = { onExpenseValueChange(expenseDetails.copy(kind = it)) },
-//            label = { Text(text = "Kind") },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(72.dp),
-//            singleLine = true,
-//            colors = TextFieldDefaults.outlinedTextFieldColors(
-//                focusedBorderColor = Color.Green,
-//                unfocusedBorderColor = Color.Green
-//            )
-//        )
-
-        OutlinedTextField(
-            value = expenseDetails.date.toString(),
-            onValueChange = {
-                onExpenseValueChange(
-                    expenseDetails.copy(
-                        date = it.toLongOrNull() ?: System.currentTimeMillis()
-                    )
-                )
-            },
-            label = { Text(text = "Date (Timestamp)") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(72.dp),
-            singleLine = true,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Green,
-                unfocusedBorderColor = Color.Green
-            ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
         DateInputField(
             label = "Date",
             dateInMillis = expenseDetails.date,
             onDateChange = { newDate ->
-                onExpenseValueChange(expenseDetails.copy(date = newDate.toLong()))
+                onExpenseValueChange(expenseDetails.copy(date = newDate))
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(72.dp)
         )
 
-
         Button(
             onClick = onSaveClick,
             enabled = expenseUiState.isEntryValid,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Save Car")
+            Text(text = "Add Expense")
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateInputField(
     label: String,
@@ -238,9 +183,9 @@ fun DateInputField(
             .fillMaxWidth()
             .height(72.dp),
         singleLine = true,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
+        colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color.Green,
-            unfocusedBorderColor = Color.Green
+            unfocusedBorderColor = Color.Green,
         ),
         readOnly = true,
         trailingIcon = {

@@ -4,21 +4,18 @@ import android.content.Context
 
 interface AppContainer {
     val carsRepository: CarsRepository
-    //val expensesRepository: ExpensesRepository
 }
 
 /**
- * [AppContainer] implementation that provides instance of [OfflineItemsRepository]
+ * src: https://developer.android.com/codelabs/basic-android-kotlin-compose-persisting-data-room#0
+ * [AppContainer] implementation that provides instance of [OfflineCarsRepository]
  */
 class AppDataContainer(private val context: Context) : AppContainer {
     /**
-     * Implementation for [ItemsRepository]
+     * Implementation for [CarsRepository]
      */
     override val carsRepository: CarsRepository by lazy {
         OfflineCarsRepository(CarDatabase.getDatabase(context).carDao())
     }
 
-//    override val expensesRepository: ExpensesRepository by lazy {
-//        OfflineExpensesRepository(CarDatabase.getDatabase(context).expenseDao())
-//    }
 }

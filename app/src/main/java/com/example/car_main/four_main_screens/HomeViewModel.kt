@@ -1,14 +1,14 @@
-package com.example.car_main.home
+package com.example.car_main.four_main_screens
 
 import android.content.Context
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.car_main.data.Car
 import com.example.car_main.data.CarsRepository
-import com.example.car_main.deleteFile
+import com.example.car_main.add_screens.deleteFile
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -24,21 +24,13 @@ class HomeViewModel(private val carsRepository: CarsRepository) : ViewModel() {
                 initialValue = HomeUiState()
             )
 
-    var curCarId: Int by mutableStateOf(0)
+    var curCarId: Int by mutableIntStateOf(0)
         private set
 
     init {
         viewModelScope.launch {
             curCarId = carsRepository.getActiveCar()?.id ?: 0
         }
-    }
-
-    fun getActive(): Int {
-        var id:Int = 0
-        viewModelScope.launch {
-            id = carsRepository.getActiveCar()?.id ?: -1
-        }
-        return id
     }
 
     suspend fun setActiveCar(carId: Int, value: Boolean) {
@@ -49,17 +41,12 @@ class HomeViewModel(private val carsRepository: CarsRepository) : ViewModel() {
         viewModelScope.launch {
             val currentActiveId = curCarId
             curCarId = carId
-            if (currentActiveId == carId) {
-                // If the clicked car is already active, deactivate it
-                //setActiveCar(carId, value = false)
-            } else {
-                // Deactivate the currently active car and activate the clicked car
+            if (currentActiveId != carId) {
                 setActiveCar(currentActiveId, value = false)
                 setActiveCar(carId, value = true)
             }
         }
     }
-
 
     suspend fun deleteItem(context: Context ,car: Car) {
         deleteFile(context = context, car.imageUri.toString())
